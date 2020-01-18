@@ -1,4 +1,4 @@
-FROM better/baseimage:alpine-3.10
+FROM better/dockerimages:legacy-alpine-3.10
 
 LABEL variant="analytics"
 
