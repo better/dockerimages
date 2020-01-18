@@ -31,6 +31,16 @@ For example:
 
 `FROM better/dockerimages:base-node-12`
 
+## Building one of these images
+
+To build any of these images simply run:
+
+`make build IMAGE={purpose}-{language|domain}`
+
+For example:
+
+`make build IMAGE=build-node`
+
 ## Viewing existing images
 
 This repo is connected to Dockerhub which deals with building our images
