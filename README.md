@@ -20,6 +20,21 @@ Note that all of our images follow a semver versioning process so make
 sure to update the version accordingly based on if there are potential breaking
 changes in your update.
 
+## Viewing existing images
+
+This repo is connected to Dockerhub which deals with building our images
+whenever tags are updated. This is configured through a regular
+expression set in Dockerhub that converts the tag into a path to a
+Dockerfile and directory for building. When tags are updated or set for
+the first time provided they follow the format above they should be
+automatically built and published by Dockerhub.
+
+To view the status on Dockerhub you can go [here](https://hub.docker.com/repository/docker/better/dockerimages).
+Credentials for if you need additional info can be found in Okta if you
+search for "Dockerhub." Depending on the size of the image the build
+might take quite some time but generally our smaller images finish in
+less than 10 minutes total after tags are set.
+
 ## Updating an existing image
 
 First make the appropriate update to the Dockerfile in question. Next
