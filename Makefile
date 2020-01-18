@@ -1,5 +1,15 @@
 image-part = $(word $2,$(subst -, ,$1))
 
+.PHONY: build
+
+build:
+ifndef IMAGE
+$(error Usage: make build IMAGE=<image>)
+endif
+	$(eval dir := $(call image-part,${IMAGE},1))
+	$(eval ext := $(call image-part,${IMAGE},2))
+	docker build -t $(IMAGE) -f $(dir)/Dockerfile.$(ext) $(dir)
+
 test:
 ifndef IMAGE
 $(error Usage: make test IMAGE=<image>)
