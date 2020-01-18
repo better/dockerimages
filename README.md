@@ -20,6 +20,17 @@ Note that all of our images follow a semver versioning process so make
 sure to update the version accordingly based on if there are potential breaking
 changes in your update.
 
+## How to reference one of these images
+
+To reference one of these images as the base image in one of your
+Dockerfile simply add:
+
+`FROM better/dockerimages:{purpose}-{language|domain}-{version}`
+
+For example:
+
+`FROM better/dockerimages:base-node-12`
+
 ## Viewing existing images
 
 This repo is connected to Dockerhub which deals with building our images
