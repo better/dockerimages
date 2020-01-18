@@ -8,8 +8,7 @@ endif
 	$(eval dir := $(call image-part,${IMAGE},1))
 	$(eval ext := $(call image-part,${IMAGE},2))
 	docker build -t test-img:$(ts) -f $(dir)/Dockerfile.$(ext) $(dir)
-	#docker rmi --force test-img:$(ts)
-	ls -l
+	docker rmi --force test-img:$(ts)
 
 release:
 ifndef VERSION
