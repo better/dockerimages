@@ -29,5 +29,5 @@ endif
 
 	@if ! test -f $(dir)/Dockerfile.$(ext); \
 		then echo "Cannot release $(IMAGE): $(dir)/Dockerfile.$(ext) does not exist"; \
-		else bash -i -c "./release.sh $(IMAGE) $(VERSION)"; \
+		else ./release.sh $(IMAGE) $(VERSION); \
 	fi
