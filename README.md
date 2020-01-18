@@ -117,3 +117,4 @@ portion of the tag. The extension on the Dockerfile must only contain
 alphanumerics and underscores in its name. As long as these rules are
 followed and things are tagged properly everything should work as
 expected.
+
