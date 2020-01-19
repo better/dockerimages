@@ -107,14 +107,14 @@ with a `\\` so it would look something like:
 ## Adding a fully new image
 
 To add a new image it should be as simple as creating a new Dockerfile
-in the correct folder with the correct extension. Note that because the
-tags are matched on dockerhub via regular expression the following
-restrictions apply:
+in the correct folder with the correct extension.
 
-The top level folder must only contain upper and lowercase letters and
-underscores in its name. This is the part that matches the `purpose`
-portion of the tag. The extension on the Dockerfile must only contain
-alphanumerics and underscores in its name. As long as these rules are
-followed and things are tagged properly everything should work as
-expected.
+Then in [docker hub](https://hub.docker.com/repository/docker/better/dockerimages/builds)
+add an automated build configuration that uses tag as the source type and...
+* source in the form `/^{purpose}-{language|domain}-*/`
+* docker tag `{sourceref}`
+* docker file location `Dockerfile.{language|domain}`
+* build context `/{purpose}/`
+
+Once the changes are merged you should merge master and follow the steps for [updating an existing image](#updating-an-existing-image)
 
