@@ -59,10 +59,10 @@ for tag in "${tags[@]}"; do
 
   if [ $HAS_REMOTE_TAG -eq 0 ]; then
     echo "    Removing existing remote tag..."
-    git push origin :$tag
+    git push origin :$tag > /dev/null
   fi
 
   echo "    Creating and pushing new tag..."
-  git tag -f $tag
-  git push origin --tags
+  git tag -f $tag > /dev/null
+  git push origin --tags > /dev/null
 done
