@@ -102,7 +102,7 @@ invoking a script from within a makefile. If these scripts appear to
 hang for you then you can skip running aliases by prepending the command
 with a `\\` so it would look something like:
 
-`IMAGE=build-node VERSION=13.4.6 \make release`
+`IMAGE=build-node VERSION=1.4.6 \make release`
 
 ## Adding a fully new image
 
