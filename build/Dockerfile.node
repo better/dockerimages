@@ -3,8 +3,6 @@ FROM node:12-alpine3.10
 LABEL \
 maintainer="core-tech@better.com"
 
-# NOTE: keeping 'make' in the baseimage allows us to use it for builds
-# TODO: write a separate "build" image, to keep the image light
 RUN apk update                                                                                \
   && apk add --upgrade --no-cache                                                             \
       coreutils openssl curl make bash git build-base docker                                  \
