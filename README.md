@@ -116,5 +116,12 @@ add an automated build configuration that uses tag as the source type and...
 * docker file location `Dockerfile.{language|domain}`
 * build context `/{purpose}/`
 
+Press save on the automated build rules. This seems to remove
+permissions from the github webhook that kicks off dockerhub builds. Go
+to the [webhook settings](https://github.com/better/dockerimages/settings/hooks)
+for this repo and click into the dockerhub webhook. Make sure that
+"Branch or tag creation" is check and click "Update webhook" at the
+bottom.
+
 Once the changes are merged you should merge master and follow the steps for [updating an existing image](#updating-an-existing-image)
 
