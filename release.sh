@@ -55,14 +55,8 @@ echo "Updating tags..."
 
 for tag in "${tags[@]}"; do
   echo "Tagging ${tag}"
-  HAS_REMOTE_TAG=$(git ls-remote --exit-code origin refs/tags/$tag > /dev/null 2> /dev/null; echo $?)
+  git tag -f $tag
 
-  if [ $HAS_REMOTE_TAG -eq 0 ]; then
-    echo "    Removing existing remote tag..."
-    git push origin :$tag > /dev/null
-  fi
-
-  echo "    Creating and pushing new tag..."
-  git tag -f $tag > /dev/null
-  git push origin --tags > /dev/null
+  echo "Pushing ${tag}"
+  git push -f ${tag}
 done
