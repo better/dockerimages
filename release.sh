@@ -58,5 +58,5 @@ for tag in "${tags[@]}"; do
   git tag -f $tag
 
   echo "Pushing ${tag}"
-  git push -f ${tag}
+  git push -f origin ${tag}
 done
