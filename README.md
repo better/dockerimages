@@ -10,30 +10,41 @@ Tags are currently written according to the format:
 {purpose}-{language|domain}-{version}
 ```
 
-The purpose should correspond to a folder in this repo which describes
-what we are using those images for. And the language/domain should
-correspond to the extension on a Dockerfile in that directory. E.g. the
-tag `base-node-12.0.0` corresponds to version 12.0.0 of the file in
-`base/Dockerfile.node`.
+Purpose corresponds to a folder in the repo. Language|domain corresponds
+to the suffix of a Dockerfile in that folder. For example,
+`base-node-12.0.0` is version 12.0.0 of `base/Dockerfile.node`. Note
+that's _not_ version 12.0.0 of node; it's revision 12.0.0 of the
+Dockerfile.
 
-Note that all of our images follow a semver versioning process so make
-sure to update the version accordingly based on if there are potential breaking
-changes in your update.
+Our images follow semantic versioning. Please version accordingly based on
+breaking changes in your update.
+
+## Tag Granularity
+
+There may be many ways to specify the same image. If `1.2.3` is the latest
+version of `base-node`, then:
+
+- `base-node-latest`
+- `base-node-1`
+- `base-node-1.2`
+- `base-node-1.2.3`
+
+all refer to the same image. Specifying a less-exact tag version can
+result in the image you use changing on repeat runs of `docker build`.
 
 ## How to reference one of these images
 
-To reference one of these images as the base image in one of your
-Dockerfile simply add:
+To write a Dockerfile based on one of these images, write:
 
 `FROM better/dockerimages:{purpose}-{language|domain}-{version}`
 
-For example:
+In a new Dockerfile. For example:
 
-`FROM better/dockerimages:base-node-12`
+`FROM better/dockerimages:base-node-12.0.0`
 
 ## Building one of these images
 
-To build any of these images simply run:
+To build any of these images:
 
 `make build IMAGE={purpose}-{language|domain}`
 
