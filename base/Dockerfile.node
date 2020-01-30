@@ -38,6 +38,3 @@ RUN  mkdir -p /etc/ssl                                                          
   && for c in /tmp/rds-crt*; do mv /$c /usr/local/share/ca-certificates/aws-rds-ca-$(basename $c).crt ; done      \
   && for c in /tmp/rs-crt* ; do mv /$c /usr/local/share/ca-certificates/redshift-ca-$(basename $c).crt; done      \
   && update-ca-certificates
-
-# Check for CVE-2019-5021
-RUN grep -F 'root:!::0:::::' /etc/shadow
