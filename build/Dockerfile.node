@@ -73,6 +73,3 @@ RUN echo "export NODE_RDKAFKA_VERSION_EXACT="$(            \
     # Get <version> from <pkg>@<version>                   \
     | cut -d@ -f2                                          \
   ) > /etc/rdkafka-info.sourceme.sh
-
-# Check for CVE-2019-5021
-RUN grep -F 'root:!::0:::::' /etc/shadow
