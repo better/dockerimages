@@ -1,30 +1,78 @@
+# TODO: refactor commonality with base-node
 FROM node:12-alpine3.10
 
-LABEL \
-maintainer="core-tech@better.com"
+LABEL maintainer="core-tech@better.com"
 
-RUN apk update                                                                                \
-  && apk add --upgrade --no-cache                                                             \
-      coreutils openssl curl make bash git build-base docker python2                          \
-  && curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux \
+ENV NPM_CONFIG_PREFIX      "/npm"
+ENV NPM_GLOBAL_PACKAGE_DIR ${NPM_CONFIG_PREFIX}"/lib/node_modules"
+
+RUN mkdir ${NPM_CONFIG_PREFIX}
+
+ENV NODE_RDKAFKA_INSTALL      ${NPM_GLOBAL_PACKAGE_DIR}"/node-rdkafka"
+ENV NODE_RDKAFKA_VERSION_SPEC "^2.7.4"
+
+# Install the base requirements for the build image: make, git, etc.
+RUN  apk update                                                   \
+  && apk add --no-cache                                           \
+      coreutils openssl curl make bash git docker ca-certificates \
+      lz4-dev cyrus-sasl-dev
+
+# In so many words, install sops v3.3.1
+RUN  curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux \
   && sha1sum sops | grep af2fc3d3a29565b0d6a73249136965ffee62892f                             \
   && chmod +x sops                                                                            \
   && mv sops /usr/local/bin
 
-# Librdkafka for event service dependents TODO: split out / parameterize
-RUN apk add --upgrade --no-cache --virtual .build-deps bash build-base linux-headers openssl-dev musl-dev python3 python3-dev \
-  && curl -o librdkafka.zip -L https://github.com/edenhill/librdkafka/archive/v1.2.1.zip                                      \
-  && echo "8b5e95318b190f40cbcd4a86d6a59dbe57b54a920d8fdf64d9c850bdf05002ca  librdkafka.zip" | sha256sum -c -                 \
-  && unzip librdkafka.zip                                                                                                     \
-  && rm librdkafka.zip                                                                                                        \
-  && cd librdkafka-1.2.1                                                                                                      \
-  && ./configure --prefix /usr                                                                                                \
-  && make                                                                                                                     \
-  && make install                                                                                                             \
-  && cd ..                                                                                                                    \
-  && rm -rf librdkafka-1.2.1                                                                                                  \
-  && apk del .build-deps                                                                                                      \
-  && rm -rf /var/cache/apk/*
+# node-rdkafka for event service dependents TODO: split out / parameterize
+#
+# NOTE: The node-rdkafka version specified by ${NODE_RDKAFKA_VERSION_SPEC}
+# MUST ALSO SATISFY the version spec used by applications. Application
+# containers should in fact test this, to make sure that the spec matches
+# the version required my their version of @better/events according to
+# `npx semver`. The following snippet should work:
+#
+# (TODO: save this somewhere as a shared script)
+#
+# RUN                                                                    \
+#   source /etc/rdkafka-info.sourceme.sh                                 \
+#   events_exact=$(npm ls -parseable -long @better/events | cut -d: -f2) \
+#   rdkafka_spec=$(npm info $events_exact dependencies.node-rdkafka)     \
+#   npx semver --range $rdkafka_spec $NODE_RDKAFKA_VERSION_EXACT
+#
+# NOTE: npm's --unsafe-perm suppresses the "change user to nobody"
+# behavior of running with --global, so that EACCESS errors don't occur
+# during the process of trying to create directories and run 'node-gyp' to
+# compile and install librdkafka as part of node-rdkafka. Within a Docker
+# build container, this is an acceptable decision: we're buildling our
+# application and its dependencies as 'root', and running as 'nobody'
+# while attempting to do so causes lots of breakage. Note that this is NOT
+# the same as _running_ our application as 'root', which is far less
+# advisable. [0] [1] [2]
+#
+# [0]: https://docs.npmjs.com/misc/config#unsafe-perm
+# [1]: https://stackoverflow.com/questions/44633419/no-access-permission-error-with-npm-global-install-on-docker-image/51796938#51796938
+# [2]: https://github.com/npm/npm/issues/3849
+#
+RUN apk add --no-cache --virtual .rdkafka-build-deps                  \
+      zlib-dev libc-dev linux-headers build-base musl-dev openssl-dev \
+      python                                                          \
+  && npm install                                                      \
+      --unsafe-perm                                                   \
+      --global                                                        \
+      node-rdkafka@${NODE_RDKAFKA_VERSION_SPEC}                       \
+  && apk del .rdkafka-build-deps
+
+# Sanity-check that node-rdkafka was installed to the expected location
+RUN &>/dev/null stat ${NODE_RDKAFKA_INSTALL}
+
+# Save exact version to an env script that derived build images can source
+RUN echo "export NODE_RDKAFKA_VERSION_EXACT="$(            \
+    npm ls -global -parseable -long node-rdkafka           \
+    # Get <pkg>@<version> from <path>:<pkg>@<version>:...? \
+    | cut -d: -f2                                          \
+    # Get <version> from <pkg>@<version>                   \
+    | cut -d@ -f2                                          \
+  ) > /etc/rdkafka-info.sourceme.sh
 
 # Check for CVE-2019-5021
 RUN grep -F 'root:!::0:::::' /etc/shadow
