@@ -28,7 +28,7 @@ RUN                                                     \
 RUN mkdir -p ${JAVA_HOME}
 
 # Perform download, checksum, extract, install...
-ENV SCRIPT download-and-install.java.sh
+ARG SCRIPT=download-and-install.java.sh
 COPY ./scripts/${SCRIPT} /tmp/
 RUN :                        \
   && chmod +x /tmp/${SCRIPT} \
