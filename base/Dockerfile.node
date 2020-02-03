@@ -29,7 +29,7 @@ RUN  curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sop
   && mv sops /usr/local/bin
 
 # Database SSL certificates
-COPY rds-combined-ca-bundle.pem redshift-ca-bundle.crt /tmp/
+COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
 RUN  mkdir -p /etc/ssl                                                                                            \
   && cp /tmp/rds-combined-ca-bundle.pem /tmp/redshift-ca-bundle.crt /etc/ssl                                      \
   && cd /tmp                                                                                                      \
