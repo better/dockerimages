@@ -1,0 +1,43 @@
+FROM better/dockerimages:base-java-latest
+
+ENV SCALA_VERSION     2.12
+ENV KAFKA_VERSION     2.2.1
+ENV ZOOKEEPER_VERSION 3.5.5
+
+ENV APACHE_MIRROR http://apache.mirrors.spacedump.net/
+
+ENV ZOOKEEPER_PATH zookeeper-${ZOOKEEPER_VERSION}
+ENV ZOOKEEPER_TGZ  apache-zookeeper-${ZOOKEEPER_VERSION}-bin.tar.gz
+ENV KAFKA_PATH     ${KAFKA_VERSION}
+ENV KAFKA_TGZ      kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
+
+ENV ZOOKEEPER_HOME /opt/apache-zookeeper-${ZOOKEEPER_VERSION}-bin
+ENV KAFKA_HOME     /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}
+
+# Copy installation and run scripts
+COPY scripts/kafka/*.sh /usr/bin/
+RUN :                                                          \
+  && chmod +x /usr/bin/download-and-install.kafka-zookeeper.sh \
+  && chmod +x /usr/bin/start-kafka.sh                          \
+  && chmod +x /usr/bin/start-zookeeper.sh                      \
+  ;
+
+# Install exact versions of Kafka and Zookeeper
+RUN /usr/bin/download-and-install.kafka-zookeeper.sh
+# Install supervisor and bash
+RUN :                              \
+  && apk add --no-cache supervisor \
+  && apk add --no-cache bash       \
+  ;
+
+# Kafka, Zookeeper config
+COPY config/kafka/local-kafka.properties ${KAFKA_HOME}/config/server.properties
+COPY config/kafka/local-zookeeper.cfg    ${ZOOKEEPER_HOME}/conf/zoo.cfg
+
+# Supervisor config
+COPY config/kafka/supervisor/*.ini /etc/supervisor.d/
+
+# 2181 is zookeeper, 9092 is kafka, 9094 is kafka SSL
+EXPOSE 2181 9092 9094
+
+ENTRYPOINT [ "supervisord", "-n" ]
