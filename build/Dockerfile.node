@@ -23,15 +23,6 @@ RUN  curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sop
   && chmod +x sops                                                                            \
   && mv sops /usr/local/bin
 
-# node-rdkafka for event service dependents TODO: split out / parameterize
-#
-# NOTE: The node-rdkafka version specified by ${NODE_RDKAFKA_VERSION_SPEC}
-# MUST ALSO SATISFY the version spec used by applications. Application
-# containers should in fact test this, to make sure that the spec matches
-# the version required my their version of @better/events according to
-# `npx semver`. This check is done by try-use-prebuilt-node-rdkafka.sh.
-#
-COPY scripts/try-use-prebuilt-node-rdkafka.sh /usr/local/bin/
 #
 # NOTE: npm's --unsafe-perm suppresses the "change user to nobody"
 # behavior of running with --global, so that EACCESS errors don't occur
@@ -67,3 +58,13 @@ RUN echo "export NODE_RDKAFKA_VERSION_EXACT="$(            \
     # Get <version> from <pkg>@<version>                   \
     | cut -d@ -f2                                          \
   ) > /etc/rdkafka-info.sourceme.sh
+
+# node-rdkafka for event service dependents TODO: split out / parameterize
+#
+# NOTE: The node-rdkafka version specified by ${NODE_RDKAFKA_VERSION_SPEC}
+# MUST ALSO SATISFY the version spec used by applications. Application
+# containers should in fact test this, to make sure that the spec matches
+# the version required my their version of @better/events according to
+# `npx semver`. This check is done by try-use-prebuilt-node-rdkafka.sh.
+#
+COPY scripts/try-use-prebuilt-node-rdkafka.sh /usr/local/bin/
