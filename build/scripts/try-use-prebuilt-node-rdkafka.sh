@@ -44,11 +44,25 @@ if [[ -e "/etc/rdkafka-info.sourceme.sh" ]]; then
       ' cannot check compatability with prebuilt node-rdkafka!'
     exit 1
   fi
-  events_exact=$(npm_list_version "@better/events")
-  if [[ -z ${events_exact} ]]; then
-    1>&2 printf 'No exact needed @better/events version found!\n'
+  events_spec=$(npm_list_version "@better/events")
+  if [[ -z ${events_spec} ]]; then
+    1>&2 printf 'No dependency version for @better/events found!\n'
     exit 1
   fi
+  events_spec_version=${events_spec##@better/events@}
+  events_versions=$(
+    npm info @better/events versions \
+      | tr --delete "[]',"
+  )
+  events_satisfying=$(
+    npx -q semver --range ${events_spec_version} ${events_versions}
+  )
+  events_exact_version=$(
+    for v in ${events_satisfying}; do echo $v; done \
+      | sort --version-sort --reverse               \
+      | head --lines 1
+  )
+  events_exact="@better/events@${events_exact_version}"
   rdkafka_spec=$(npm info "${events_exact}" dependencies.node-rdkafka)
   if [[ -z ${rdkafka_spec} ]]; then
     rdkafka_spec=$(
@@ -62,7 +76,7 @@ if [[ -e "/etc/rdkafka-info.sourceme.sh" ]]; then
   fi
   if $(
     # We don't care about any of this output, only success on exit
-    &>/dev/null npx semver          \
+    &>/dev/null npx -q semver       \
       --range ${rdkafka_spec}       \
       ${NODE_RDKAFKA_VERSION_EXACT}
   ); then
