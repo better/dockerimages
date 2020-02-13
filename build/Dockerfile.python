@@ -6,13 +6,13 @@ LABEL maintainer="core-tech@better.com"
 RUN addgroup -g ${USER_ID} ${USER} && adduser -D -G ${USER} -u ${USER_ID} ${USER}
 
 # System dependencies
-RUN apk add  --no-cache                                                \
-      linux-headers coreutils ca-certificates openssl openssl-dev      \
-      musl-dev g++ python3 git curl bash build-base docker
+RUN apk add  --no-cache \
+      coreutils openssl python3 git curl make bash docker
 
 # Database SSL certificates
 COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
-RUN  mkdir -p /etc/ssl                                                                                            \
+RUN  :
+  && mkdir -p /etc/ssl                                                                                            \
   && cp /tmp/rds-combined-ca-bundle.pem /tmp/redshift-ca-bundle.crt /etc/ssl                                      \
   && cd /tmp                                                                                                      \
   && csplit --elide-empty-files --quiet --prefix rds-crt rds-combined-ca-bundle.pem '/-BEGIN CERTIFICATE-/' '{*}' \
@@ -28,7 +28,8 @@ RUN  curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sop
   && mv sops /usr/local/bin
 
 # Librdkafka for event service dependents
-RUN curl -L https://github.com/edenhill/librdkafka/archive/v1.2.1.zip > librdkafka.zip                       \
+RUN :
+  && curl -L https://github.com/edenhill/librdkafka/archive/v1.2.1.zip > librdkafka.zip                      \
   && echo "8b5e95318b190f40cbcd4a86d6a59dbe57b54a920d8fdf64d9c850bdf05002ca librdkafka.zip" | sha256sum -c - \
   && unzip librdkafka.zip                                                                                    \
   && rm librdkafka.zip                                                                                       \
