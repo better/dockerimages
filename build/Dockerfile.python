@@ -8,7 +8,7 @@ RUN addgroup -g ${USER_ID} ${USER} && adduser -D -G ${USER} -u ${USER_ID} ${USER
 # System dependencies
 RUN apk add  --no-cache                                                \
       linux-headers coreutils ca-certificates openssl openssl-dev      \
-      musl-dev g++ python3 python3-dev git curl bash build-base docker
+      musl-dev g++ python3 git curl bash build-base docker
 
 # Database SSL certificates
 COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
