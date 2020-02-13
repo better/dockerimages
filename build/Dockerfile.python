@@ -12,7 +12,7 @@ RUN :;                                                   \
 
 # System dependencies
 RUN apk add  --no-cache \
-      coreutils openssl python3 git curl make bash docker
+      coreutils openssl python3 git curl make bash git docker
 
 # Database SSL certificates
 COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
