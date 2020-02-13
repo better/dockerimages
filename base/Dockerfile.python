@@ -1,0 +1,55 @@
+FROM alpine:3.10
+
+LABEL maintainer="core-tech@better.com"
+
+# System setup
+RUN :;                                                   \
+  if [[ -n "${USER_ID}" ]]; then                         \
+    :                                                    \
+    && addgroup -g "${USER_ID}" "${USER}"                \
+    && adduser -D -G "${USER}" -u "${USER_ID}" "${USER}" \
+  ; fi
+
+# Install python3
+RUN apk add  --no-cache        \
+      # lz4-dev and sasl-dev are .so's that librdkafka depends on
+      python3 docker curl coreutils lz4-dev cyrus-sasl-dev
+
+# Database SSL certificates
+COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
+RUN :                                                                                                             \
+  && mkdir -p /etc/ssl                                                                                            \
+  && cp /tmp/rds-combined-ca-bundle.pem /tmp/redshift-ca-bundle.crt /etc/ssl                                      \
+  && cd /tmp                                                                                                      \
+  && csplit --elide-empty-files --quiet --prefix rds-crt rds-combined-ca-bundle.pem '/-BEGIN CERTIFICATE-/' '{*}' \
+  && csplit --elide-empty-files --quiet --prefix rs-crt redshift-ca-bundle.crt      '/-BEGIN CERTIFICATE-/' '{*}' \
+  && for c in /tmp/rds-crt*; do mv /$c /usr/local/share/ca-certificates/aws-rds-ca-$(basename $c).crt ; done      \
+  && for c in /tmp/rs-crt* ; do mv /$c /usr/local/share/ca-certificates/redshift-ca-$(basename $c).crt; done      \
+  && update-ca-certificates
+
+# In so many words, install sops v3.3.1
+RUN :                                                                                         \
+  && curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux \
+  && sha1sum sops | grep af2fc3d3a29565b0d6a73249136965ffee62892f                             \
+  && chmod +x sops                                                                            \
+  && mv sops /usr/local/bin
+
+# Librdkafka for event service dependents
+# TODO: bootstrap prebuilt librdkafka from the python build docker image
+RUN :                                                                                                        \
+  && apk add --no-cache --virtual .rdkafka-build-deps                                                        \
+      zlib-dev libc-dev linux-headers build-base musl-dev openssl-dev                                        \
+      python make bash                                                                                       \
+  && curl -L https://github.com/edenhill/librdkafka/archive/v1.2.1.zip > librdkafka.zip                      \
+  && echo "8b5e95318b190f40cbcd4a86d6a59dbe57b54a920d8fdf64d9c850bdf05002ca librdkafka.zip" | sha256sum -c - \
+  && unzip librdkafka.zip                                                                                    \
+  && rm librdkafka.zip                                                                                       \
+  && cd librdkafka-1.2.1                                                                                     \
+  && ./configure --prefix /usr                                                                               \
+  && make                                                                                                    \
+  && make install                                                                                            \
+  && apk del .rdkafka-build-deps
+
+# Application dependencies
+RUN python3 -m ensurepip \
+  && pip3 install --upgrade pip setuptools
