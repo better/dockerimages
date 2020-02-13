@@ -3,7 +3,12 @@ FROM alpine:3.10
 LABEL maintainer="core-tech@better.com"
 
 # System setup
-RUN addgroup -g ${USER_ID} ${USER} && adduser -D -G ${USER} -u ${USER_ID} ${USER}
+RUN :;                                                   \
+  if [[ -n "${USER_ID}" ]]; then                         \
+    :                                                    \
+    && addgroup -g "${USER_ID}" "${USER}"                \
+    && adduser -D -G "${USER}" -u "${USER_ID}" "${USER}" \
+  ; fi
 
 # System dependencies
 RUN apk add  --no-cache \
