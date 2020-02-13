@@ -53,7 +53,7 @@ RUN :                                                                           
 RUN :                                                                 \
   && apk add --no-cache --virtual .rdkafka-build-deps                 \
       zlib-dev libc-dev linux-headers build-base musl-dev openssl-dev \
-      python                                                          \
+      python make bash                                                \
   && npm install                                                      \
       --unsafe-perm                                                   \
       --global                                                        \
