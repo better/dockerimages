@@ -18,19 +18,22 @@ RUN mkdir ${NPM_CONFIG_PREFIX}
 # present in the application container image because they are loaded as
 # shared objects when node-rdkafka is `require(...)`d.
 #
-RUN  apk update                                     \
+RUN :                                               \
+  && apk update                                     \
   && apk add --no-cache                             \
       coreutils openssl curl lz4-dev cyrus-sasl-dev
 
 # In so many words, install sops v3.3.1
-RUN  curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux  \
-  && sha1sum sops | grep af2fc3d3a29565b0d6a73249136965ffee62892f                              \
-  && chmod +x sops                                                                             \
+RUN :                                                                                         \
+  && curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux \
+  && sha1sum sops | grep af2fc3d3a29565b0d6a73249136965ffee62892f                             \
+  && chmod +x sops                                                                            \
   && mv sops /usr/local/bin
 
 # Database SSL certificates
 COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
-RUN  mkdir -p /etc/ssl                                                                                            \
+RUN  :                                                                                                            \
+  && mkdir -p /etc/ssl                                                                                            \
   && cp /tmp/rds-combined-ca-bundle.pem /tmp/redshift-ca-bundle.crt /etc/ssl                                      \
   && cd /tmp                                                                                                      \
   && csplit --elide-empty-files --quiet --prefix rds-crt rds-combined-ca-bundle.pem '/-BEGIN CERTIFICATE-/' '{*}' \

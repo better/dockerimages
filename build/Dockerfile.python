@@ -11,7 +11,7 @@ RUN apk add  --no-cache \
 
 # Database SSL certificates
 COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
-RUN  :
+RUN :                                                                                                             \
   && mkdir -p /etc/ssl                                                                                            \
   && cp /tmp/rds-combined-ca-bundle.pem /tmp/redshift-ca-bundle.crt /etc/ssl                                      \
   && cd /tmp                                                                                                      \
@@ -22,13 +22,14 @@ RUN  :
   && update-ca-certificates
 
 # In so many words, install sops v3.3.1
-RUN  curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux \
+RUN :                                                                                         \
+  && curl -o sops -L https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux \
   && sha1sum sops | grep af2fc3d3a29565b0d6a73249136965ffee62892f                             \
   && chmod +x sops                                                                            \
   && mv sops /usr/local/bin
 
 # Librdkafka for event service dependents
-RUN :
+RUN :                                                                                                        \
   && curl -L https://github.com/edenhill/librdkafka/archive/v1.2.1.zip > librdkafka.zip                      \
   && echo "8b5e95318b190f40cbcd4a86d6a59dbe57b54a920d8fdf64d9c850bdf05002ca librdkafka.zip" | sha256sum -c - \
   && unzip librdkafka.zip                                                                                    \
