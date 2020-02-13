@@ -12,14 +12,13 @@ ENV NODE_RDKAFKA_INSTALL      ${NPM_GLOBAL_PACKAGE_DIR}"/node-rdkafka"
 ENV NODE_RDKAFKA_VERSION_SPEC "^2.7.4"
 
 # Install the base requirements for the build image: make, git, etc.
-RUN  apk update                                                   \
-  && apk add --no-cache                                           \
-      coreutils openssl curl make bash git docker ca-certificates \
-      lz4-dev cyrus-sasl-dev
+RUN  apk update                                                          \
+  && apk add --no-cache                                                  \
+      coreutils openssl curl make bash git docker lz4-dev cyrus-sasl-dev
 
 # Database SSL certificates
 COPY config/rds-combined-ca-bundle.pem config/redshift-ca-bundle.crt /tmp/
-RUN :                                                                                                            \
+RUN :                                                                                                             \
   && mkdir -p /etc/ssl                                                                                            \
   && cp /tmp/rds-combined-ca-bundle.pem /tmp/redshift-ca-bundle.crt /etc/ssl                                      \
   && cd /tmp                                                                                                      \
