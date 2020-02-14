@@ -12,8 +12,8 @@ Tags are currently written according to the format:
 
 Purpose corresponds to a folder in the repo. Language|domain corresponds
 to the suffix of a Dockerfile in that folder. For example,
-`base-node-12.0.0` is version 12.0.0 of `base/Dockerfile.node`. Note
-that's _not_ version 12.0.0 of node; it's revision 12.0.0 of the
+`base-node-1.0.0` is version 1.0.0 of `base/Dockerfile.node`. Note
+that's _not_ version 1.0.0 of node; it's revision 1.0.0 of the
 Dockerfile.
 
 Our images follow semantic versioning. Please version accordingly based on
@@ -40,7 +40,7 @@ To write a Dockerfile based on one of these images, write:
 
 In a new Dockerfile. For example:
 
-`FROM better/dockerimages:base-node-12.0.0`
+`FROM better/dockerimages:base-node-1.0.0`
 
 ## Building one of these images
 
@@ -92,15 +92,15 @@ with an optional `-<special tag>`.
 
 So a full version of this command could look like:
 
-`IMAGE=build-node VERSION=13.4.6 make release`
+`IMAGE=build-node VERSION=1.1.0 make release`
 
 This command will do all the proper tagging which will kick off builds
 on dockerhub based on the tags changed. It will release the current
 version to the following tags:
 
-- `build-node-13`
-- `build-node-13.4`
-- `build-node-13.4.6`
+- `build-node-1`
+- `build-node-1.1`
+- `build-node-1.1.0`
 
 The release process will also detect if this appears to be the latest
 version released and ask you to confirm if it should update the `build-node:latest` tag.
