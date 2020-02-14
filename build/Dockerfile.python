@@ -3,15 +3,15 @@ FROM python:3-alpine
 LABEL maintainer="core-tech@better.com"
 
 # Install the build requirements
-COPY scripts/common.sh common.sh
-RUN apk update && apk upgrade && apk add --no-cache git make docker && \
-    chmod +x common.sh && ./common.sh
+COPY scripts/common.sh scripts/common-build.sh ./
+RUN apk update && apk upgrade && \
+    chmod +x common.sh && ./common.sh && \
+    chmod +x common-build.sh && ./common-build.sh
 
 # Librdkafka for event service dependents
 RUN :                                                                                                        \
   && apk add --no-cache --virtual .rdkafka-build-deps                                                        \
-      zlib-dev libc-dev linux-headers build-base musl-dev openssl-dev                                        \
-      python make bash                                                                                       \
+      zlib-dev libc-dev linux-headers musl-dev                                                               \
   && curl -L https://github.com/edenhill/librdkafka/archive/v1.2.1.zip > librdkafka.zip                      \
   && echo "8b5e95318b190f40cbcd4a86d6a59dbe57b54a920d8fdf64d9c850bdf05002ca librdkafka.zip" | sha256sum -c - \
   && unzip librdkafka.zip                                                                                    \
@@ -21,7 +21,3 @@ RUN :                                                                           
   && make                                                                                                    \
   && make install                                                                                            \
   && apk del .rdkafka-build-deps
-
-# Application dependencies
-RUN python3 -m ensurepip \
-  && pip3 install --upgrade pip setuptools

@@ -1,8 +1,0 @@
-FROM postgres:10-alpine
-
-LABEL maintainer="core-tech@better.com"
-
-# Install the build requirements
-COPY scripts/common.sh common.sh
-RUN apk update && apk upgrade && apk add --no-cache git build-base make docker python3 && \
-    chmod +x common.sh && ./common.sh

@@ -11,9 +11,10 @@ ENV NODE_RDKAFKA_INSTALL      ${NPM_GLOBAL_PACKAGE_DIR}"/node-rdkafka"
 ENV NODE_RDKAFKA_VERSION_SPEC "^2.7.4"
 
 # Install the build requirements
-COPY scripts/common.sh common.sh
-RUN apk update && apk upgrade && apk add --no-cache git make docker && \
-    chmod +x common.sh && ./common.sh
+COPY scripts/common.sh scripts/common-build.sh ./
+RUN apk update && apk upgrade && \
+    chmod +x common.sh && ./common.sh && \
+    chmod +x common-build.sh && ./common-build.sh
 
 #
 # NOTE: npm's --unsafe-perm suppresses the "change user to nobody"
@@ -32,8 +33,8 @@ RUN apk update && apk upgrade && apk add --no-cache git make docker && \
 #
 RUN :                                                                 \
   && apk add --no-cache --virtual .rdkafka-build-deps                 \
-      zlib-dev libc-dev linux-headers build-base musl-dev openssl-dev \
-      python make bash                                                \
+      zlib-dev libc-dev linux-headers musl-dev                        \
+      python                                                          \
   && npm install                                                      \
       --unsafe-perm                                                   \
       --global                                                        \

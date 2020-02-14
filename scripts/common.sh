@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Install common dependancies
-apk add --no-cache coreutils bash openssl curl lz4-dev cyrus-sasl-dev
+apk add --no-cache coreutils bash openssl curl
 
 # Database SSL certificates
 mkdir -p /etc/ssl && \
