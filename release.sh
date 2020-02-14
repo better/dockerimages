@@ -54,9 +54,12 @@ echo ""
 echo "Updating tags..."
 
 for tag in "${tags[@]}"; do
+  if [[ ${tag} == "latest" ]]; then
+    force='-f'
+  fi
   echo "Tagging ${tag}"
-  git tag -f $tag
+  git tag ${force} $tag
 
   echo "Pushing ${tag}"
-  git push -f origin ${tag}
+  git push ${force} origin ${tag}
 done
