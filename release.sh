@@ -54,7 +54,7 @@ echo ""
 echo "Updating tags..."
 
 for tag in "${tags[@]}"; do
-  if [[ ${tag} == "latest" ]]; then
+  unless [[ ${tag} == ${version} ]]; then
     force='-f'
   fi
   echo "Tagging ${tag}"
