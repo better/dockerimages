@@ -54,9 +54,10 @@ echo ""
 echo "Updating tags..."
 
 for tag in "${tags[@]}"; do
-  unless [[ ${tag} == ${version} ]]; then
+  if [[ ${tag} != ${version} ]]; then
     force='-f'
   fi
+
   echo "Tagging ${tag}"
   git tag ${force} $tag
 
