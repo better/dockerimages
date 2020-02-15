@@ -5,6 +5,7 @@ LABEL maintainer="core-tech@better.com"
 # Install the build requirements
 COPY scripts/common.sh scripts/common-build.sh ./
 RUN apk update && apk upgrade && \
+    apk add --no-cache python3-dev && \
     chmod +x common.sh && ./common.sh && \
     chmod +x common-build.sh && ./common-build.sh
 
