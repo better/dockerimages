@@ -1,4 +1,4 @@
-.PHONY: test-build test-base
+.PHONY: test-build test-base release-major-% release-minor-% release-patch-% release-build-% release-base-%
 
 INITIAL_VERSION=1.0.0
 
@@ -48,3 +48,14 @@ release-minor-%:
 
 release-patch-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,patch)), $(INITIAL_VERSION)))
+
+release-build-%:
+	$(MAKE) release-$*-build-node release-$*-build-python release-$*-build-postgres
+
+release-base-%:
+	$(MAKE) release-$*-base-node release-$*-base-python
+
+release-%:
+	$(MAKE) release-build-$* release-base-$*
+
+release: release-patch

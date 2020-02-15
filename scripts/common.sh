@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Install common dependancies
-apk add --no-cache coreutils bash openssl curl
+apk add --no-cache coreutils bash ca-certificates openssl curl wget
 
 # Database SSL certificates
 mkdir -p /etc/ssl && \
