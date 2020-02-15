@@ -46,11 +46,11 @@ In a new Dockerfile. For example:
 
 To build any of these images:
 
-`make build IMAGE={purpose}-{language|domain}`
+`make build-IMAGE`
 
 For example:
 
-`make build IMAGE=build-node`
+`make build-build-node`
 
 ## Viewing existing images
 
@@ -72,11 +72,11 @@ less than 10 minutes total after tags are set.
 First make the appropriate update to the Dockerfile in question. Next
 test that it builds properly by running:
 
-`IMAGE={purpose}-{language|domain} make test`
+`make test-IMAGE`
 
 So for example:
 
-`IMAGE=build-node make test`
+`make test-build-node`
 
 This will make sure that your build runs all the way through. At this
 point you should open a pull request with your changes to the image and
@@ -85,14 +85,11 @@ get it merged to master.
 Once the changes are merged you should merge master and run the
 following:
 
-`IMAGE={purpose}-{language|domain} VERSION={new version} make release`
-
-The `VERSION` input should be a full version number in the form `X.X.X`
-with an optional `-<special tag>`.
+`make release-TYPE-IMAGE`
 
 So a full version of this command could look like:
 
-`IMAGE=build-node VERSION=1.1.0 make release`
+`make release-patch-build-node`
 
 This command will do all the proper tagging which will kick off builds
 on dockerhub based on the tags changed. It will release the current
@@ -105,15 +102,11 @@ version to the following tags:
 The release process will also detect if this appears to be the latest
 version released and ask you to confirm if it should update the `build-node:latest` tag.
 
-### Zshell
+Available TYPES are
 
-It seems some Zsh configurations (possibly OhMyZsh) alias make to add
-color to the output. This seems to break some printing behavior when
-invoking a script from within a makefile. If these scripts appear to
-hang for you then you can skip running aliases by prepending the command
-with a `\\` so it would look something like:
-
-`IMAGE=build-node VERSION=1.4.6 \make release`
+- `major`
+- `minor`
+- `patch`
 
 ## Adding a fully new image
 
