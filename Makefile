@@ -2,14 +2,13 @@
 
 image-part = $(word $2,$(subst -, ,$1))
 
-define get_tag
-	git --no-pager tag --contains HEAD "$(1)-[0-9.]*" | head -n $(2) | tail -n 1 | cut -d '-' -f 3
-endef
+get_tag = git --no-pager tag -l "$(1)-[0-9.]*" | head -n $(2) | tail -n 1 | cut -d '-' -f 3
 
 define increment_version
-	@if test $(2) -eq 'major'; then $(call get_tag,$(1),1) | awk -F '.' '{print $$1+1"."$$2"."$$3}'; \
-	elif test $(2) -eq 'minor'; then $(call get_tag,$(1),2) | awk -F '.' '{print $$1"."$$2+1"."$$3}'; \
-	elif test $(2) -eq 'patch'; then $(call get_tag,$(1),3) | awk -F '.' '{print $$1"."$$2"."$$3+1}'; \
+	@if [[ $(2) == major ]]; then $(call get_tag,$(1),1) | awk -F '.' '{print $$1+1"."$$2"."$$3}'; \
+	elif [[ $(2) == minor ]]; then $(call get_tag,$(1),2) | awk -F '.' '{print $$1"."$$2+1"."$$3}'; \
+	elif [[ $(2) == patch ]]; then $(call get_tag,$(1),3) | awk -F '.' '{print $$1"."$$2"."$$3+1}'; \
+	else echo 'none'; \
 	fi
 endef
 
