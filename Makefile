@@ -1,10 +1,8 @@
 .PHONY: test-build test-base release-major-% release-minor-% release-patch-% release-build-% release-base-%
 
 INITIAL_VERSION=1.0.0
-
 image-part = $(word $2,$(subst -, ,$1))
-
-get_tag = git --no-pager tag -l "$(1)-[0-9.]*" | head -n $(2) | tail -n 1 | cut -d '-' -f 3
+get_tag = git --no-pager tag -l "$(1)-[0-9.]*" | cut -d '-' -f 3 | ./semversort.sh | head -n $(2) | tail -n 1
 
 define increment_version
 	if [[ $(2) == major ]]; then $(call get_tag,$(1),1) | awk -F '.' '{print $$1+1"."$$2"."$$3}'; \
