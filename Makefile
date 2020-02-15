@@ -1,5 +1,7 @@
 .PHONY: test-build test-base
 
+INITIAL_VERSION=1.0.0
+
 image-part = $(word $2,$(subst -, ,$1))
 
 get_tag = git --no-pager tag -l "$(1)-[0-9.]*" | head -n $(2) | tail -n 1 | cut -d '-' -f 3
@@ -39,10 +41,10 @@ test-base: test-base-node test-base-python test-base-java test-base-kafka
 test: test-build test-base
 
 release-major-%:
-	$(call tag_and_push,$*,$(shell $(call increment_version,$*,major)))
+	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,major)), $(INITIAL_VERSION)))
 
 release-minor-%:
-	$(call tag_and_push,$*,$(shell $(call increment_version,$*,minor)))
+	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,minor)), $(INITIAL_VERSION)))
 
 release-patch-%:
-	$(call tag_and_push,$*,$(shell $(call increment_version,$*,patch)))
+	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,patch)), $(INITIAL_VERSION)))
