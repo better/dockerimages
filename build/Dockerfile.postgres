@@ -1,6 +1,11 @@
+FROM better/dockerimages:build-python-latest AS builder
+
 FROM postgres:10-alpine
 
 LABEL maintainer="core-tech@better.com"
+
+# Librdkafka for event service dependents
+COPY --from=builder /usr/lib/librdkafka.so /usr/lib/librdkafka.so
 
 # Install the build requirements
 COPY scripts/common.sh scripts/common-build.sh ./
