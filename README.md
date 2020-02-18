@@ -1,4 +1,4 @@
-# Better Docker images
+# Better Docker Images
 
 Images for Better's projects.
 
