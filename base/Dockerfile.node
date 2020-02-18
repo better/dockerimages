@@ -7,6 +7,8 @@ ENV NPM_GLOBAL_PACKAGE_DIR ${NPM_CONFIG_PREFIX}"/lib/node_modules"
 
 RUN mkdir ${NPM_CONFIG_PREFIX}
 
+ARG BASE_APK_DEPENDENCIES
+
 # Install the base requirements
 #
 # NOTE that node-rdkafka itself will be copied from the build-node image
@@ -15,5 +17,19 @@ RUN mkdir ${NPM_CONFIG_PREFIX}
 # present in the application container image because they are loaded as
 # shared objects when node-rdkafka is `require(...)`d.
 #
-COPY scripts/common.sh common.sh
-RUN apk update && apk upgrade && chmod +x common.sh && ./common.sh
+COPY                                         \
+  scripts/common/install-rds-certificates.sh \
+  scripts/common/install-sops.sh             \
+  /tmp/scripts/common/
+RUN :                                                         \
+  && apk update                                               \
+  && apk upgrade                                              \
+  && apk add --no-cache                                       \
+    # Base dependencies                                       \
+    ${BASE_APK_DEPENDENCIES}                                  \
+  # Run common install scripts                                \
+  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
+  && chmod +x /tmp/scripts/common/install-sops.sh             \
+  && /tmp/scripts/common/install-rds-certificates.sh          \
+  && /tmp/scripts/common/install-sops.sh                      \
+  ;
