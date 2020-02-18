@@ -24,7 +24,7 @@ endef
 build-%:
 	$(eval dir := $(call image-part,$*,1))
 	$(eval ext := $(call image-part,$*,2))
-	docker build -t $($*) -f $(dir)/Dockerfile.$(ext) .
+	docker build -t $* -f $(dir)/Dockerfile.$(ext) .
 
 test-%:
 	$(eval ts := $(shell date +'%s'))
