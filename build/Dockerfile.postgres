@@ -2,30 +2,9 @@ FROM postgres:10-alpine
 
 LABEL maintainer="core-tech@better.com"
 
-ARG BASE_APK_DEPENDENCIES
-ARG BUILD_APK_DEPENDENCIES
-
-# Install the image requirements
-COPY                                         \
-  scripts/common/install-rds-certificates.sh \
-  scripts/common/install-sops.sh             \
-  /tmp/scripts/common/
-RUN :                                                         \
-  && apk update                                               \
-  && apk upgrade                                              \
-  && apk add --no-cache                                       \
-    # Base dependencies                                       \
-    ${BASE_APK_DEPENDENCIES}                                  \
-    # Base build dependencies                                 \
-    ${BUILD_APK_DEPENDENCIES}                                 \
-  # Python-specific build dependencies                        \
-  && apk add --no-cache                                       \
-    python3-dev                                               \
-    py3-setuptools                                            \
-  # Run common install scripts                                \
-  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
-  && chmod +x /tmp/scripts/common/install-sops.sh             \
-  && /tmp/scripts/common/install-rds-certificates.sh          \
-  && /tmp/scripts/common/install-sops.sh                      \
-  ;
-
+# Install the build requirements
+COPY scripts/common.sh scripts/common-build.sh ./
+RUN apk update && apk upgrade && \
+    apk add --no-cache python3-dev py3-setuptools librdkafka librdkafka-dev && \
+    chmod +x common.sh && ./common.sh && \
+    chmod +x common-build.sh && ./common-build.sh

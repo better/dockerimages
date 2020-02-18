@@ -2,50 +2,12 @@
 
 INITIAL_VERSION=1.0.0
 image-part = $(word $2,$(subst -, ,$1))
-
-export BASE_APK_DEPENDENCIES:= \
-	bash                  \
-	curl                  \
-	openssl               \
-	coreutils             \
-	ca-certificates
-
-export BUILD_APK_DEPENDENCIES:= \
-	jq                     \
-	git                    \
-	tar                    \
-	make                   \
-	gnupg                  \
-	docker                 \
-	lz4-dev                \
-	yaml-dev               \
-	zlib-dev               \
-	build-base             \
-	libffi-dev             \
-	libxslt-dev            \
-	openssl-dev            \
-	linux-headers          \
-	cyrus-sasl-dev         \
-	libjpeg-turbo-dev
-
-define get_tag
-	git --no-pager tag -l "$(1)-[0-9.]*" \
-		| cut -d '-' -f 3                  \
-		| ./semversort.sh                  \
-		| head -n $(2)                     \
-		| tail -n 1
-endef
+get_tag = git --no-pager tag -l "$(1)-[0-9.]*" | cut -d '-' -f 3 | ./semversort.sh | head -n $(2) | tail -n 1
 
 define increment_version
-	if   [[ $(2) == major ]]; then              \
-		$(call get_tag,$(1),1)                    \
-		| awk -F '.' '{print $$1+1".0.0"}';       \
-	elif [[ $(2) == minor ]]; then              \
-		$(call get_tag,$(1),2)                    \
-		| awk -F '.' '{print $$1"."$$2+1".0"}';   \
-	elif [[ $(2) == patch ]]; then              \
-		$(call get_tag,$(1),3)                    \
-		| awk -F '.' '{print $$1"."$$2"."$$3+1}'; \
+	if [[ $(2) == major ]]; then $(call get_tag,$(1),1) | awk -F '.' '{print $$1+1".0.0"}'; \
+	elif [[ $(2) == minor ]]; then $(call get_tag,$(1),2) | awk -F '.' '{print $$1"."$$2+1".0"}'; \
+	elif [[ $(2) == patch ]]; then $(call get_tag,$(1),3) | awk -F '.' '{print $$1"."$$2"."$$3+1}'; \
 	fi
 endef
 
@@ -62,24 +24,14 @@ endef
 build-%:
 	$(eval dir := $(call image-part,$*,1))
 	$(eval ext := $(call image-part,$*,2))
-	docker build                                                     \
-		--build-arg BASE_APK_DEPENDENCIES="${BASE_APK_DEPENDENCIES}"   \
-		--build-arg BUILD_APK_DEPENDENCIES="${BUILD_APK_DEPENDENCIES}" \
-		--tag $*                                                       \
-		--file $(dir)/Dockerfile.$(ext)                                \
-		.
+	docker build -t $* -f $(dir)/Dockerfile.$(ext) .
 
 test-%:
-	$(eval timestamp := $(shell date +'%s'))
+	$(eval ts := $(shell date +'%s'))
 	$(eval dir := $(call image-part,$*,1))
 	$(eval ext := $(call image-part,$*,2))
-	docker build                                                     \
-		--build-arg BASE_APK_DEPENDENCIES="${BASE_APK_DEPENDENCIES}"   \
-		--build-arg BUILD_APK_DEPENDENCIES="${BUILD_APK_DEPENDENCIES}" \
-		--tag test-image:${timestamp}                                  \
-		--file $(dir)/Dockerfile.$(ext)                                \
-		.
-	docker rmi --force test-image:${timestamp}
+	docker build -t test-img:$(ts) -f $(dir)/Dockerfile.$(ext) .
+	docker rmi --force test-img:$(ts)
 
 test-build: test-build-node test-build-python test-build-postgres
 test-base: test-base-node test-base-python test-base-java test-base-kafka
