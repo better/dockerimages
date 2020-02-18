@@ -2,12 +2,31 @@ FROM python:3-alpine
 
 LABEL maintainer="core-tech@better.com"
 
-# Install the build requirements
-COPY scripts/common.sh scripts/common-build.sh ./
-RUN apk update && apk upgrade && \
-    apk add --no-cache python3-dev py3-setuptools && \
-    chmod +x common.sh && ./common.sh && \
-    chmod +x common-build.sh && ./common-build.sh
+ARG BASE_APK_DEPENDENCIES
+ARG BUILD_APK_DEPENDENCIES
+
+# Install the image requirements
+COPY                                         \
+  scripts/common/install-rds-certificates.sh \
+  scripts/common/install-sops.sh             \
+  /tmp/scripts/common/
+RUN :                                                         \
+  && apk update                                               \
+  && apk upgrade                                              \
+  && apk add --no-cache                                       \
+    # Base dependencies                                       \
+    ${BASE_APK_DEPENDENCIES}                                  \
+    # Base build dependencies                                 \
+    ${BUILD_APK_DEPENDENCIES}                                 \
+  && apk add --no-cache                                       \
+    python3-dev                                               \
+    py3-setuptools                                            \
+  # Run common install scripts                                \
+  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
+  && chmod +x /tmp/scripts/common/install-sops.sh             \
+  && /tmp/scripts/common/install-rds-certificates.sh          \
+  && /tmp/scripts/common/install-sops.sh                      \
+  ;
 
 # Librdkafka for event service dependents
 RUN :                                                                                                        \
@@ -21,4 +40,5 @@ RUN :                                                                           
   && ./configure --prefix /usr                                                                               \
   && make                                                                                                    \
   && make install                                                                                            \
-  && apk del .rdkafka-build-deps
+  && apk del .rdkafka-build-deps                                                                             \
+  ;
