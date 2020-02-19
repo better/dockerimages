@@ -10,11 +10,28 @@ RUN mkdir ${NPM_CONFIG_PREFIX}
 ENV NODE_RDKAFKA_INSTALL      ${NPM_GLOBAL_PACKAGE_DIR}"/node-rdkafka"
 ENV NODE_RDKAFKA_VERSION_SPEC "^2.7.4"
 
+ARG BASE_APK_DEPENDENCIES
+ARG BUILD_APK_DEPENDENCIES
+
 # Install the build requirements
-COPY scripts/common.sh scripts/common-build.sh ./
-RUN apk update && apk upgrade && \
-    chmod +x common.sh && ./common.sh && \
-    chmod +x common-build.sh && ./common-build.sh
+COPY                                         \
+  scripts/common/install-rds-certificates.sh \
+  scripts/common/install-sops.sh             \
+  /tmp/scripts/common/
+RUN :                                                         \
+  && apk update                                               \
+  && apk upgrade                                              \
+  && apk add --no-cache                                       \
+    # Base dependencies                                       \
+    ${BASE_APK_DEPENDENCIES}                                  \
+    # Base build dependencies                                 \
+    ${BUILD_APK_DEPENDENCIES}                                 \
+  # Run common install scripts                                \
+  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
+  && chmod +x /tmp/scripts/common/install-sops.sh             \
+  && /tmp/scripts/common/install-rds-certificates.sh          \
+  && /tmp/scripts/common/install-sops.sh                      \
+  ;
 
 #
 # NOTE: npm's --unsafe-perm suppresses the "change user to nobody"
@@ -31,14 +48,14 @@ RUN apk update && apk upgrade && \
 # [1]: https://stackoverflow.com/questions/44633419/no-access-permission-error-with-npm-global-install-on-docker-image/51796938#51796938
 # [2]: https://github.com/npm/npm/issues/3849
 #
-RUN :                                                                 \
-  && apk add --no-cache --virtual .rdkafka-build-deps                 \
-      zlib-dev libc-dev linux-headers musl-dev                        \
-      python                                                          \
-  && npm install                                                      \
-      --unsafe-perm                                                   \
-      --global                                                        \
-      node-rdkafka@${NODE_RDKAFKA_VERSION_SPEC}                       \
+RUN :                                                 \
+  && apk add --no-cache --virtual .rdkafka-build-deps \
+      zlib-dev libc-dev linux-headers musl-dev        \
+      python                                          \
+  && npm install                                      \
+      --unsafe-perm                                   \
+      --global                                        \
+      node-rdkafka@${NODE_RDKAFKA_VERSION_SPEC}       \
   && apk del .rdkafka-build-deps
 
 # Sanity-check that node-rdkafka was installed to the expected location
