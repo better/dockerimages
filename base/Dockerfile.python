@@ -22,6 +22,12 @@ RUN :                                                         \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
   && /tmp/scripts/common/install-rds-certificates.sh          \
   && /tmp/scripts/common/install-sops.sh                      \
+  # link python to match what alpine apk does                 \
+  && ln -s /usr/local/bin/python /usr/bin/python3.8           \
+  && ln -s /usr/local/bin/python /usr/bin/python3             \
+  && ln -s /usr/local/bin/python /usr/bin/python              \
+  && ln -s /usr/local/bin/pip /usr/bin/pip3                   \
+  && ln -s /usr/local/bin/pip /usr/bin/pip                    \
   ;
 
 # Librdkafka for event service dependents
