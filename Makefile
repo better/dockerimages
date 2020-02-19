@@ -39,7 +39,7 @@ build-%:
 	$(eval ext := $(call image-part,$*,2))
 	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
 	IMAGE_NAME=$*                            \
-		./hooks/build
+		${dir}/hooks/build
 
 test-%:
 	$(eval timestamp := $(shell date +'%s'))
@@ -47,7 +47,7 @@ test-%:
 	$(eval ext := $(call image-part,$*,2))
 	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
 	IMAGE_NAME=$*                            \
-		./hooks/build
+		${dir}/hooks/build
 	docker rmi --force test-image:${timestamp}
 
 test-build: test-build-node test-build-python test-build-postgres
