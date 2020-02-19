@@ -3,31 +3,6 @@
 INITIAL_VERSION=1.0.0
 image-part = $(word $2,$(subst -, ,$1))
 
-export BASE_APK_DEPENDENCIES:= \
-	bash                  \
-	curl                  \
-	openssl               \
-	coreutils             \
-	ca-certificates
-
-export BUILD_APK_DEPENDENCIES:= \
-	jq                     \
-	git                    \
-	tar                    \
-	make                   \
-	gnupg                  \
-	docker                 \
-	lz4-dev                \
-	yaml-dev               \
-	zlib-dev               \
-	build-base             \
-	libffi-dev             \
-	libxslt-dev            \
-	openssl-dev            \
-	linux-headers          \
-	cyrus-sasl-dev         \
-	libjpeg-turbo-dev
-
 define get_tag
 	git --no-pager tag -l "$(1)-[0-9.]*" \
 		| cut -d '-' -f 3                  \
@@ -62,23 +37,17 @@ endef
 build-%:
 	$(eval dir := $(call image-part,$*,1))
 	$(eval ext := $(call image-part,$*,2))
-	docker build                                                     \
-		--build-arg BASE_APK_DEPENDENCIES="${BASE_APK_DEPENDENCIES}"   \
-		--build-arg BUILD_APK_DEPENDENCIES="${BUILD_APK_DEPENDENCIES}" \
-		--tag $*                                                       \
-		--file $(dir)/Dockerfile.$(ext)                                \
-		.
+	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
+	IMAGE_NAME=$*                            \
+		./hooks/build
 
 test-%:
 	$(eval timestamp := $(shell date +'%s'))
 	$(eval dir := $(call image-part,$*,1))
 	$(eval ext := $(call image-part,$*,2))
-	docker build                                                     \
-		--build-arg BASE_APK_DEPENDENCIES="${BASE_APK_DEPENDENCIES}"   \
-		--build-arg BUILD_APK_DEPENDENCIES="${BUILD_APK_DEPENDENCIES}" \
-		--tag test-image:${timestamp}                                  \
-		--file $(dir)/Dockerfile.$(ext)                                \
-		.
+	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
+	IMAGE_NAME=$*                            \
+		./hooks/build
 	docker rmi --force test-image:${timestamp}
 
 test-build: test-build-node test-build-python test-build-postgres
