@@ -10,22 +10,26 @@ COPY                                         \
   scripts/common/install-rds-certificates.sh \
   scripts/common/install-sops.sh             \
   /tmp/scripts/common/
-RUN :                                                         \
-  && apk update                                               \
-  && apk upgrade                                              \
-  && apk add --no-cache                                       \
-    # Base dependencies                                       \
-    ${BASE_APK_DEPENDENCIES}                                  \
-    # Base build dependencies                                 \
-    ${BUILD_APK_DEPENDENCIES}                                 \
-  # Python-specific build dependencies                        \
-  && apk add --no-cache                                       \
-    python3-dev                                               \
-    py3-setuptools                                            \
-  # Run common install scripts                                \
-  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
-  && chmod +x /tmp/scripts/common/install-sops.sh             \
-  && /tmp/scripts/common/install-rds-certificates.sh          \
-  && /tmp/scripts/common/install-sops.sh                      \
+RUN :                                                           \
+  && apk update                                                 \
+  && apk upgrade                                                \
+  && apk add --no-cache                                         \
+    # Base dependencies                                         \
+    ${BASE_APK_DEPENDENCIES}                                    \
+    # Base build dependencies                                   \
+    ${BUILD_APK_DEPENDENCIES}                                   \
+  # Python-specific build dependencies                          \
+  && apk add --no-cache                                         \
+    python3-dev                                                 \
+    py3-setuptools                                              \
+  && mkdir -p /usr/local/bin/python3.8                          \
+  && ln -s /usr/bin/python3.8 /usr/local/bin/python3.8          \
+  && ln -s /usr/bin/python3 /usr/bin/python                     \
+  && ln -s /usr/bin/pip3 /usr/bin/pip                           \
+  # Run common install scripts                                  \
+  && chmod +x /tmp/scripts/common/install-rds-certificates.sh   \
+  && chmod +x /tmp/scripts/common/install-sops.sh               \
+  && /tmp/scripts/common/install-rds-certificates.sh            \
+  && /tmp/scripts/common/install-sops.sh                        \
   ;
 
