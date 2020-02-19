@@ -50,8 +50,8 @@ test-%:
 		${dir}/hooks/build
 	docker rmi --force test-image:${timestamp}
 
-test-build: test-build-node test-build-python test-build-postgres
-test-base: test-base-node test-base-python test-base-java test-base-kafka
+test-build: test-build-node test-build-python test-build-postgres test-build-go
+test-base: test-base-node test-base-python test-base-java test-base-kafka test-base-go
 
 test: test-build test-base
 
@@ -65,10 +65,10 @@ release-patch-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,patch)), $(INITIAL_VERSION)))
 
 release-build-%:
-	$(MAKE) release-$*-build-node release-$*-build-python release-$*-build-postgres
+	$(MAKE) release-$*-build-node release-$*-build-python release-$*-build-postgres release-$*-build-go
 
 release-base-%:
-	$(MAKE) release-$*-base-node release-$*-base-python
+	$(MAKE) release-$*-base-node release-$*-base-python release-$*-base-go
 
 release-%:
 	$(MAKE) release-build-$* release-base-$*
