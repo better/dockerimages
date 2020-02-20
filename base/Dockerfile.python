@@ -1,5 +1,3 @@
-FROM better/dockerimages:build-python-latest AS builder
-
 FROM python:3-alpine
 
 LABEL maintainer="core-tech@better.com"
@@ -17,6 +15,8 @@ RUN :                                                         \
   && apk add --no-cache                                       \
     # Base dependencies                                       \
     ${BASE_APK_DEPENDENCIES}                                  \
+    # Librdkafka                                              \
+    librdkafka                                                \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
@@ -29,6 +29,3 @@ RUN :                                                         \
   && ln -s /usr/local/bin/pip /usr/bin/pip3                   \
   && ln -s /usr/local/bin/pip /usr/bin/pip                    \
   ;
-
-# Librdkafka for event service dependents
-COPY --from=builder /usr/lib/librdkafka.so /usr/lib/librdkafka.so
