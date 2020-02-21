@@ -22,6 +22,8 @@ RUN :                                                         \
   && apk update                                               \
   && apk upgrade                                              \
   && apk add --no-cache                                       \
+    # Install python3 because it is required for node-gyp     \
+    python3                                                   \
     # Base dependencies                                       \
     ${BASE_APK_DEPENDENCIES}                                  \
     # Base build dependencies                                 \
