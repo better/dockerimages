@@ -22,6 +22,7 @@ RUN :                                                           \
   && apk add --no-cache                                         \
     python3-dev                                                 \
     py3-setuptools                                              \
+    librdkafka-dev                                              \
   # link python3/pip3 to python/pip                             \
   && ln -s /usr/bin/python3 /usr/bin/python                     \
   && ln -s /usr/bin/pip3 /usr/bin/pip                           \
