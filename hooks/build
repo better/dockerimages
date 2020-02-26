@@ -5,6 +5,9 @@ export BASE_APK_DEPENDENCIES=(
   openssl
   coreutils
   ca-certificates
+  # librdkafka needs these .so's at runtime
+  lz4-dev
+  cyrus-sasl-dev
 )
 
 export BUILD_APK_DEPENDENCIES=(
@@ -14,7 +17,6 @@ export BUILD_APK_DEPENDENCIES=(
   make
   gnupg
   docker
-  lz4-dev
   yaml-dev
   zlib-dev
   build-base
@@ -22,7 +24,6 @@ export BUILD_APK_DEPENDENCIES=(
   libxslt-dev
   openssl-dev
   linux-headers
-  cyrus-sasl-dev
   libjpeg-turbo-dev
 )
 
