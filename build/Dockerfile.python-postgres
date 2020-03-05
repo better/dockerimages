@@ -1,0 +1,38 @@
+FROM postgres:10-alpine
+
+LABEL maintainer="core-tech@better.com"
+
+ARG BASE_APK_DEPENDENCIES
+ARG BUILD_APK_DEPENDENCIES
+
+# Copy needed common installation scripts
+COPY                                         \
+  scripts/common/install-rds-certificates.sh \
+  scripts/common/install-sops.sh             \
+  /tmp/scripts/common/
+# Copy needed build installation scripts
+COPY                                   \
+  scripts/build/install-semver-tool.sh \
+  /tmp/scripts/build/
+# Install packages then run installation scripts
+RUN :                                                         \
+  && apk update                                               \
+  && apk upgrade                                              \
+  && apk add --no-cache                                       \
+    # Base dependencies                                       \
+    ${BASE_APK_DEPENDENCIES}                                  \
+    # Base build dependencies                                 \
+    ${BUILD_APK_DEPENDENCIES}                                 \
+  && apk add --no-cache                                       \
+    python3-dev                                               \
+    py3-setuptools                                            \
+    librdkafka-dev                                            \
+  # Run common install scripts                                \
+  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
+  && chmod +x /tmp/scripts/common/install-sops.sh             \
+  && /tmp/scripts/common/install-rds-certificates.sh          \
+  && /tmp/scripts/common/install-sops.sh                      \
+  # Run build install scripts                                 \
+  && chmod +x /tmp/scripts/build/install-semver-tool.sh       \
+  && /tmp/scripts/build/install-semver-tool.sh                \
+  ;
