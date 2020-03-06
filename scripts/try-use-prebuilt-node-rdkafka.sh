@@ -30,6 +30,9 @@ function npm_list_version () {
     echo ${listed}
   fi
 }
+# Install semver to NPM_CONFIG_PREFIX (in iamges, this is `/npm`)
+npm install --global semver
+npm_semver=$(npm config prefix)/bin/semver
 if [[ -e "/etc/rdkafka-info.sourceme.sh" ]]; then
   source "/etc/rdkafka-info.sourceme.sh"
   if [[ -z ${NODE_RDKAFKA_INSTALL} ]]; then
@@ -55,7 +58,7 @@ if [[ -e "/etc/rdkafka-info.sourceme.sh" ]]; then
       | tr --delete "[]',"
   )
   events_satisfying=$(
-    npx -q semver --range ${events_spec_version} ${events_versions}
+    ${npm_semver} --range ${events_spec_version} ${events_versions}
   )
   events_exact_version=$(
     for v in ${events_satisfying}; do echo $v; done \
@@ -76,7 +79,7 @@ if [[ -e "/etc/rdkafka-info.sourceme.sh" ]]; then
   fi
   if $(
     # We don't care about any of this output, only success on exit
-    &>/dev/null npx -q semver       \
+    &>/dev/null ${npm_semver}       \
       --range ${rdkafka_spec}       \
       ${NODE_RDKAFKA_VERSION_EXACT}
   ); then
@@ -93,3 +96,5 @@ else
   1>&2 printf 'no rdkafka info found at /etc/rdkafka-info.sourceme.sh\n'
   exit 1
 fi
+# Remove npm semver
+npm remove --global semver
