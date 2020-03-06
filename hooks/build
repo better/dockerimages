@@ -17,6 +17,7 @@ export BUILD_APK_DEPENDENCIES=(
   make
   gnupg
   docker
+  openssh
   yaml-dev
   zlib-dev
   build-base
