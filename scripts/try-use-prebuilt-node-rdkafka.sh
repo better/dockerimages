@@ -32,7 +32,7 @@ function npm_list_version () {
 }
 # Install semver to NPM_CONFIG_PREFIX (in iamges, this is `/npm`)
 npm install --global semver
-npm_semver=$(npm config prefix)/bin/semver
+npm_semver=$(npm config get prefix)/bin/semver
 if [[ -e "/etc/rdkafka-info.sourceme.sh" ]]; then
   source "/etc/rdkafka-info.sourceme.sh"
   if [[ -z ${NODE_RDKAFKA_INSTALL} ]]; then
