@@ -5,7 +5,9 @@ image-part = $(word $2,$(subst -, ,$1))
 
 define get_tag
 	git --no-pager tag -l "$(1)-[0-9.]*" \
-		| cut -d '-' -f 3                  \
+		| rev                              \
+		| cut -d '-' -f 1                  \
+		| rev                              \
 		| ./semversort.sh                  \
 		| head -n $(2)                     \
 		| tail -n 1
