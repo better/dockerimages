@@ -72,7 +72,10 @@ release-build-%:
 release-base-%:
 	$(MAKE) release-$*-base-node release-$*-base-python release-$*-base-go
 
+release-test-%:
+	$(MAKE) release-$*-test-python
+
 release-%:
-	$(MAKE) release-build-$* release-base-$*
+	$(MAKE) release-build-$* release-base-$* release-test-$*
 
 release: release-patch

@@ -1,0 +1,6 @@
+FROM python:3-alpine
+
+LABEL maintainer="core-tech@better.com"
+
+RUN apk add git
+RUN pip install boto3 crontab PyYaml pytest pytest-html requests
