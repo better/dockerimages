@@ -4,3 +4,5 @@ LABEL maintainer="core-tech@better.com"
 
 RUN apk add make git openssh
 RUN npm -g install lodash js-yaml fs-extra
+
+ENV NODE_PATH /usr/local/lib/node_modules
