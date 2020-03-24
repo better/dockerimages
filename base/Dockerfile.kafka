@@ -14,6 +14,8 @@ ENV KAFKA_TGZ      kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz
 ENV ZOOKEEPER_HOME /opt/apache-zookeeper-${ZOOKEEPER_VERSION}-bin
 ENV KAFKA_HOME     /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}
 
+ENV ADVERTISED_LISTENERS CLIENT://127.0.0.1:9092
+
 # Copy installation and run scripts
 COPY scripts/kafka/*.sh /usr/bin/
 RUN :                                                          \
