@@ -2,7 +2,7 @@ FROM better/dockerimages:base-java-latest
 
 ENV SCALA_VERSION     2.12
 ENV KAFKA_VERSION     2.2.1
-ENV ZOOKEEPER_VERSION 3.5.5
+ENV ZOOKEEPER_VERSION 3.5.7
 
 ENV APACHE_MIRROR http://apache.mirrors.spacedump.net/
 
