@@ -1,0 +1,20 @@
+FROM quay.io/roboll/helmfile:helm3-v0.104.0
+
+LABEL maintainer="core-tech@better.com"
+
+COPY scripts/common/install-sops.sh /tmp/scripts/common/
+
+RUN apk add make
+
+# Install specifc version of kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.9/bin/linux/amd64/kubectl && \
+    sha256sum kubectl | grep d2a31e87c5f6deced4ba8899f9c465e54822f0cd146f32ea83cb1daafa5d9c4f && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/kubectl
+
+# Install kops and sops
+RUN curl -LO https://github.com/kubernetes/kops/releases/download/1.14.1/kops-linux-amd64 && \
+    sha256sum kops-linux-amd64 | grep 970e621d03fef7109f7882bff727f9f05eecc555ce69d2c25c668dda2dd6b248 && \
+    chmod +x kops-linux-amd64 && \
+    mv kops-linux-amd64 /usr/local/bin/kops && \
+    chmod +x /tmp/scripts/common/install-sops.sh && /tmp/scripts/common/install-sops.sh

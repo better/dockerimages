@@ -72,11 +72,11 @@ less than 10 minutes total after tags are set.
 First make the appropriate update to the Dockerfile in question. Next
 test that it builds properly by running:
 
-`make test-IMAGE`
+`make build-IMAGE`
 
 So for example:
 
-`make test-build-node`
+`make build-build-node`
 
 This will make sure that your build runs all the way through. At this
 point you should open a pull request with your changes to the image and

@@ -1,4 +1,4 @@
-.PHONY: test-build test-base release-major-% release-minor-% release-patch-% release-build-% release-base-%
+.PHONY: release-major-% release-minor-% release-patch-%
 
 INITIAL_VERSION=1.0.0
 image-part = $(word $2,$(subst -, ,$1))
@@ -41,21 +41,7 @@ build-%:
 	$(eval ext := $(call image-part,$*,2))
 	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
 	IMAGE_NAME=$*                            \
-		${dir}/hooks/build
-
-test-%:
-	$(eval timestamp := $(shell date +'%s'))
-	$(eval dir := $(call image-part,$*,1))
-	$(eval ext := $(call image-part,$*,2))
-	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
-	IMAGE_NAME=$*                            \
-		${dir}/hooks/build
-	docker rmi --force test-image:${timestamp}
-
-test-build: test-build-node test-build-python test-build-postgres test-build-go
-test-base: test-base-node test-base-python test-base-java test-base-kafka test-base-go
-
-test: test-build test-base
+		hooks/build
 
 release-major-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,major)), $(INITIAL_VERSION)))
@@ -65,17 +51,3 @@ release-minor-%:
 
 release-patch-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,patch)), $(INITIAL_VERSION)))
-
-release-build-%:
-	$(MAKE) release-$*-build-node release-$*-build-python release-$*-build-postgres release-$*-build-go
-
-release-base-%:
-	$(MAKE) release-$*-base-node release-$*-base-python release-$*-base-go
-
-release-test-%:
-	$(MAKE) release-$*-test-python
-
-release-%:
-	$(MAKE) release-build-$* release-base-$* release-test-$*
-
-release: release-patch
