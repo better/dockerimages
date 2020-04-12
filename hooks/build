@@ -5,6 +5,8 @@ export BASE_APK_DEPENDENCIES=(
   openssl
   coreutils
   ca-certificates
+  # qpid proton (for activemq) needs this library to authenticate
+  cyrus-sasl-plain
   # librdkafka needs these .so's at runtime
   lz4-dev
   cyrus-sasl-dev
