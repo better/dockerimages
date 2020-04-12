@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3-alpine3.11
 
 LABEL maintainer="core-tech@better.com"
 
@@ -27,6 +27,7 @@ RUN :                                                         \
     python3-dev                                               \
     py3-setuptools                                            \
     librdkafka-dev                                            \
+    postgresql-dev                                            \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
