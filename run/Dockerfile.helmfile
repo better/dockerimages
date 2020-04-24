@@ -1,10 +1,12 @@
-FROM quay.io/roboll/helmfile:helm3-v0.104.0
+FROM quay.io/roboll/helmfile:helm3-v0.111.0
 
 LABEL maintainer="core-tech@better.com"
 
 COPY scripts/common/install-sops.sh /tmp/scripts/common/
 
-RUN apk add make
+RUN apk add make python3 nodejs
+RUN pip install requests kubernetes
+RUN RUN npm -g install lodash js-yaml fs-extra @kubernetes/client-node
 
 # Install specifc version of kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.9/bin/linux/amd64/kubectl && \
