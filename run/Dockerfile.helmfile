@@ -9,8 +9,8 @@ RUN apk add make python3 nodejs npm && \
     ln -s /usr/bin/pip3 /usr/bin/pip && \
     ln -s /usr/bin/python3 /usr/bin/python
 
-RUN pip install requests kubernetes && \
-    npm -g install lodash js-yaml fs-extra @kubernetes/client-node
+RUN pip install boto3 requests kubernetes && \
+    npm -g install lodash js-yaml fs-extra aws-sdk @kubernetes/client-node
 
 # Install specifc version of kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.9/bin/linux/amd64/kubectl && \
