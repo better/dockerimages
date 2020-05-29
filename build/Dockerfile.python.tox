@@ -13,6 +13,9 @@ RUN apk add bzip2-dev
 RUN apk add readline-dev
 RUN apk add sqlite-dev
 
+# Next, we install the sqlite3 command, for testing database code that uses Sqlite3 (python standard lib)
+RUN apk add sqlite
+
 # Now, we install a couple of useful scripts
 COPY build/scripts/forall-py.sh /usr/bin/forall-py
 COPY build/scripts/with-pyenv.sh /usr/bin/with-pyenv
