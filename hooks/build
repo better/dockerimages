@@ -22,12 +22,16 @@ export BUILD_APK_DEPENDENCIES=(
   openssh
   yaml-dev
   zlib-dev
+  bzip2-dev
   build-base
   libffi-dev
   libxslt-dev
   openssl-dev
   linux-headers
   libjpeg-turbo-dev
+  readline-dev
+  sqlite-dev
+  sqlite
 )
 
 # Will this work on Docker Hub? Is `git` available? Should be...

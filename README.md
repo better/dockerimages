@@ -108,6 +108,13 @@ Available TYPES are
 - `minor`
 - `patch`
 
+### Adding a package to APK for all images to use
+
+If you need to add an APK package to all images, you can do so by modifying
+either `BASE_APK_DEPENDENCIES` or `BUILD_APK_DEPENDENCIES` in `hooks/build`.
+Then, when you execute `make build-IMAGE` as above, it will pick up the packages
+you added.
+
 ## Adding a fully new image
 
 To add a new image it should be as simple as creating a new Dockerfile
