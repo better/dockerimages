@@ -28,6 +28,10 @@ RUN :                                                         \
     py3-setuptools                                            \
     librdkafka-dev                                            \
     postgresql-dev                                            \
+    bzip2-dev                                                 \
+    readline-dev                                              \  
+    sqlite-dev                                                \
+    sqlite                                                    \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
