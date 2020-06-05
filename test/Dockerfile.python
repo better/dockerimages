@@ -3,4 +3,4 @@ FROM python:3-alpine
 LABEL maintainer="core-tech@better.com"
 
 RUN apk add make git openssh
-RUN pip install boto3 crontab PyYaml pytest pytest-cov pytest-html requests
+RUN pip install boto3 crontab PyYaml pytest pytest-cov pytest-html requests moto
