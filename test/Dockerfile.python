@@ -7,4 +7,4 @@ RUN pip install boto3 crontab PyYaml pytest pytest-cov pytest-html requests
 
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev \
  && pip install moto \
- && apk del .build-deps gcc musl-dev libffi-dev openssl-dev
+ && apk del .build-deps
