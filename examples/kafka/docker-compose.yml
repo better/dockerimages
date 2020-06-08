@@ -1,0 +1,23 @@
+version: '3'
+services:
+  kafka:
+    image: better/dockerimages:base-kafka-latest
+    environment:
+      LISTENERS: 'DOCKER://0.0.0.0:19092,LOCAL://0.0.0.0:9092'
+      ADVERTISED_LISTENERS: 'DOCKER://kafka:19092,LOCAL://127.0.0.1:9092'
+      INTER_BROKER_LISTENER_NAME: 'DOCKER'
+      LISTENER_SECURITY_PROTOCOL_MAP: 'DOCKER:PLAINTEXT,LOCAL:PLAINTEXT'
+    ports:
+      - '9092:9092'
+      - '2181:2181'
+  kafkahq:
+    image: tchiotludo/kafkahq
+    environment:
+      KAFKAHQ_CONFIGURATION: |
+        kafkahq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: 'kafka:19092'
+    ports:
+      - '8080:8080'
