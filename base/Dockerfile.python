@@ -1,4 +1,4 @@
-FROM python:3-alpine3.11
+FROM python:3-alpine3.12
 
 LABEL maintainer="core-tech@better.com"
 
@@ -16,7 +16,9 @@ RUN :                                                         \
     # Base dependencies                                       \
     ${BASE_APK_DEPENDENCIES}                                  \
     # Librdkafka                                              \
-    librdkafka                                                \
+    build-base                                                \
+    librdkafka=1.4.2-r0                                       \
+    librdkafka-dev=1.4.2-r0                                   \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
@@ -28,4 +30,6 @@ RUN :                                                         \
   && ln -s /usr/local/bin/python /usr/bin/python              \
   && ln -s /usr/local/bin/pip /usr/bin/pip3                   \
   && ln -s /usr/local/bin/pip /usr/bin/pip                    \
+  # Install confluent-kafka so we know it works.              \
+  && pip install confluent-kafka==1.4.2                       \
   ;
