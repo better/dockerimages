@@ -1,4 +1,4 @@
-FROM python:3-alpine3.11
+FROM python:3-alpine3.12
 
 LABEL maintainer="core-tech@better.com"
 
@@ -26,7 +26,8 @@ RUN :                                                         \
   && apk add --no-cache                                       \
     python3-dev                                               \
     py3-setuptools                                            \
-    librdkafka-dev                                            \
+    librdkafka=1.4.2-r0                                       \
+    librdkafka-dev=1.4.2-r0                                   \
     postgresql-dev                                            \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
@@ -36,4 +37,6 @@ RUN :                                                         \
   # Run build install scripts                                 \
   && chmod +x /tmp/scripts/build/install-semver-tool.sh       \
   && /tmp/scripts/build/install-semver-tool.sh                \
+  # Install a pinned version of confluent-kafka               \
+  && pip install confluent-kafka==1.4.2                       \
   ;
