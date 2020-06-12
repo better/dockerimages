@@ -33,6 +33,7 @@ RUN :                                                         \
     ${BASE_APK_DEPENDENCIES}                                  \
     # Base build dependencies                                 \
     ${BUILD_APK_DEPENDENCIES}                                 \
+    libsecret-dev                                             \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
