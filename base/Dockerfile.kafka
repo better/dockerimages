@@ -17,6 +17,7 @@ ENV KAFKA_HOME     /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}
 #
 # See README.kafka.md for descriptions of these variables.
 #
+ENV AUTO_CREATE_TOPICS_ENABLE      false
 ENV LISTENERS                      LOCAL://0.0.0.0:9092
 ENV ADVERTISED_LISTENERS           LOCAL://127.0.0.1:9092
 ENV INTER_BROKER_LISTENER_NAME     LOCAL

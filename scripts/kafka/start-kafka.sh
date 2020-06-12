@@ -5,6 +5,7 @@ until bash $ZOOKEEPER_HOME/bin/zkServer.sh status; do
 done
 exec bash $KAFKA_HOME/bin/kafka-server-start.sh                         \
   $KAFKA_HOME/config/server.properties                                  \
+  --override auto.create.topics.enable=${AUTO_CREATE_TOPICS_ENABLE}     \
   --override listeners="${LISTENERS}"                                   \
   --override advertised.listeners="${ADVERTISED_LISTENERS}"             \
   --override inter.broker.listener.name="${INTER_BROKER_LISTENER_NAME}" \
