@@ -9,4 +9,5 @@ exec bash $KAFKA_HOME/bin/kafka-server-start.sh                         \
   --override listeners="${LISTENERS}"                                   \
   --override advertised.listeners="${ADVERTISED_LISTENERS}"             \
   --override inter.broker.listener.name="${INTER_BROKER_LISTENER_NAME}" \
-  --override listener.security.protocol.map="${LISTENER_SECURITY_PROTOCOL_MAP}"
+  --override listener.security.protocol.map="${LISTENER_SECURITY_PROTOCOL_MAP}" \
+  --override group.initial.rebalance.delay.ms="${GROUP_INITIAL_REBALANCE_DELAY_MS}"
