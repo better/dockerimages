@@ -1,8 +1,8 @@
 #/bin/sh -e
 # Install sops
 # Inputs: can specify version, checksum
-SOPS_VERSION=${SOPS_VERSION:-"3.3.1"}
-SOPS_SHA1_SUM=${SOPS_SHA1_SUM:-"af2fc3d3a29565b0d6a73249136965ffee62892f"}
+SOPS_VERSION=${SOPS_VERSION:-"3.5.0"}
+SOPS_SHA1_SUM=${SOPS_SHA1_SUM:-"029fce87c11266d498453bb73584ab168a3f014f"}
 # URLs: constructed from version/GitHub release page pattern
 SOPS_URL_BASE="https://github.com/mozilla/sops/releases/download"
 SOPS_TARGET="${SOPS_VERSION}/sops-${SOPS_VERSION}.linux"
