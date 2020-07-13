@@ -9,7 +9,7 @@ RUN apk add make python3 nodejs npm && \
     ln -s /usr/bin/pip3 /usr/bin/pip && \
     ln -s /usr/bin/python3 /usr/bin/python
 
-RUN pip install boto3 requests kubernetes && \
+RUN pip install boto3 requests kubernetes awscli && \
     npm -g install lodash js-yaml fs-extra aws-sdk @kubernetes/client-node
 
 # Install specifc version of kubectl
@@ -24,8 +24,5 @@ RUN curl -LO https://github.com/kubernetes/kops/releases/download/1.14.1/kops-li
     chmod +x kops-linux-amd64 && \
     mv kops-linux-amd64 /usr/local/bin/kops && \
     chmod +x /tmp/scripts/common/install-sops.sh && /tmp/scripts/common/install-sops.sh
-
-# Install aws-cli
-RUN pip3 install awscli --upgrade --user
 
 ENV NODE_PATH /usr/lib/node_modules
