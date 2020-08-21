@@ -24,7 +24,7 @@ COPY build/scripts/with-pyenv.sh /usr/bin/with-pyenv
 RUN with-pyenv install 3.6.10
 RUN with-pyenv install 3.7.7
 RUN with-pyenv install 3.8.2
-ENV PYENV_VERSIONS="3.6.10 3.7.7 3.8.2"
+ENV PYENV_VERSIONS "3.6.10 3.7.7 3.8.2"
 RUN with-pyenv shell $PYENV_VERSIONS
 
 # Next, we upgrade pip to the latest version.
@@ -32,8 +32,8 @@ RUN pip install --upgrade pip
 RUN forall-py pip install --upgrade pip
 
 # Next, we use pipx to isolate installations for our tools into their own pythons.
-ENV PIPX_BIN_DIR=/usr/local/bin
-ENV PIPX_HOME=/usr/local/share/pipx
+ENV PIPX_BIN_DIR /usr/local/bin
+ENV PIPX_HOME /usr/local/share/pipx
 RUN pip install pipx
 RUN pipx ensurepath
 
@@ -55,7 +55,7 @@ RUN pipx install coverage
 ENV PYENV_SHELL ash
 ENV PATH /etc/pyenv/shims:/etc/pyenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV PYENV_ROOT /etc/pyenv
-ENV PYENV_VERSION=3.6.10:3.7.7:3.8.2
+ENV PYENV_VERSION 3.6.10:3.7.7:3.8.2
 
 # We don't set an entrypoint because the user is expected to derive or compose
 # another container using this as a base image.
