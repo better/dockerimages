@@ -21,21 +21,41 @@ COPY build/scripts/forall-py.sh /usr/bin/forall-py
 COPY build/scripts/with-pyenv.sh /usr/bin/with-pyenv
 
 # Next, we use pyenv to install the versions of Python we plan to support
-RUN with-pyenv install 3.6.8
-RUN with-pyenv install 3.7.5
+RUN with-pyenv install 3.6.10
+RUN with-pyenv install 3.7.7
 RUN with-pyenv install 3.8.2
-ENV PYENV_VERSIONS "3.6.8 3.7.5 3.8.2"
+ENV PYENV_VERSIONS="3.6.10 3.7.7 3.8.2"
 RUN with-pyenv shell $PYENV_VERSIONS
 
-# Next, we use forall-py to install pytest, coverage, and tox for all of our Pythons.
+# Next, we upgrade pip to the latest version.
+RUN pip install --upgrade pip
 RUN forall-py pip install --upgrade pip
-RUN forall-py pip install --upgrade pytest coverage tox mypy
+
+# Next, we use pipx to isolate installations for our tools into their own pythons.
+ENV PIPX_BIN_DIR=/usr/local/bin
+ENV PIPX_HOME=/usr/local/share/pipx
+RUN pip install pipx
+RUN pipx ensurepath
+
+# Use black, isort, and flake8 to format and organize code and import lines.
+RUN pipx install black
+RUN pipx install isort
+RUN pipx install flake8
+
+# Use pipenv to manage dependencies deterministically.
+RUN pipx install pipenv
+
+# Use pytest, tox, mypy, and coverage to check your code and run tests.
+RUN pipx install pytest
+RUN pipx install tox
+RUN pipx install mypy
+RUN pipx install coverage
 
 # Then, we set up environment so that users can run the commands we support easily.
 ENV PYENV_SHELL ash
 ENV PATH /etc/pyenv/shims:/etc/pyenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV PYENV_ROOT /etc/pyenv
-ENV PYENV_VERSION 3.6.8:3.7.5:3.8.2
+ENV PYENV_VERSION=3.6.10:3.7.7:3.8.2
 
 # We don't set an entrypoint because the user is expected to derive or compose
 # another container using this as a base image.
