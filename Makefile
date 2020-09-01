@@ -1,5 +1,10 @@
-.PHONY: release-major-% release-minor-% release-patch-%
+#### Build system for docker images
+### Initial setup
+## Default target
+.PHONY: all
+all: help
 
+## Define handy macros for managing verison numbers, &c.
 INITIAL_VERSION=1.0.0
 image-part = $(word $2,$(subst -, ,$1))
 
@@ -36,6 +41,9 @@ define tag_and_push
 	fi
 endef
 
+### Define build system
+## Build pattern to build an image
+.PHONY: build-%
 build-%:
 	$(eval dir := $(call image-part,$*,1))
 	$(eval ext := $(call image-part,$*,2))
@@ -43,11 +51,30 @@ build-%:
 	IMAGE_NAME=$*                            \
 		hooks/build
 
+## Release pattern to bump version numbers and publish a tag
+.PHONY: release-major-%
 release-major-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,major)), $(INITIAL_VERSION)))
 
+.PHONY: release-minor-%
 release-minor-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,minor)), $(INITIAL_VERSION)))
 
+.PHONY: release-patch-%
 release-patch-%:
 	$(call tag_and_push,$*,$(or $(shell $(call increment_version,$*,patch)), $(INITIAL_VERSION)))
+
+### Define convenience targets
+## Build system for all python images
+.PHONY: build-all-python-images
+build-all-python-images: build-build-python build-build-python-postgres build-build-python.tox build-base-python
+
+### Help targets
+.PHONY: help
+help:
+	@ echo 'To build an image: make build-imagename'
+	@ echo 'To clean an image: make clean-imagename'
+	@ echo 'To release an image: make release-{major,minor,patch}-imagename'
+	@ echo 'To build all python images: make build-all-python-images'
+	@ echo 'For more information, c.f. README.'
+	@ echo $(.PHONY)

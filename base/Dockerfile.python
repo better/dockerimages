@@ -8,6 +8,7 @@ ARG BASE_APK_DEPENDENCIES
 COPY                                         \
   scripts/common/install-rds-certificates.sh \
   scripts/common/install-sops.sh             \
+  scripts/common/install-latest-librdkafka.sh \
   /tmp/scripts/common/
 RUN :                                                         \
   && apk update                                               \
@@ -17,19 +18,17 @@ RUN :                                                         \
     ${BASE_APK_DEPENDENCIES}                                  \
     # Librdkafka                                              \
     build-base                                                \
-    librdkafka=1.4.2-r0                                       \
-    librdkafka-dev=1.4.2-r0                                   \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
+  && chmod +x /tmp/scripts/common/install-latest-librdkafka.sh \
   && /tmp/scripts/common/install-rds-certificates.sh          \
   && /tmp/scripts/common/install-sops.sh                      \
+  && /tmp/scripts/common/install-latest-librdkafka.sh         \
   # link python to match what alpine apk does                 \
   && ln -s /usr/local/bin/python /usr/bin/python3.8           \
   && ln -s /usr/local/bin/python /usr/bin/python3             \
   && ln -s /usr/local/bin/python /usr/bin/python              \
   && ln -s /usr/local/bin/pip /usr/bin/pip3                   \
   && ln -s /usr/local/bin/pip /usr/bin/pip                    \
-  # Install confluent-kafka so we know it works.              \
-  && pip install confluent-kafka==1.4.2                       \
   ;
