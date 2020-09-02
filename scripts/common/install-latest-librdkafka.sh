@@ -1,32 +1,41 @@
-#!/bin/bash
+#!/bin/bash -e
 #### Install latest librdkafka, right from the GIT repo.
 
 ### Define the version of kafka we are pinning to.
 kafka_version=1.5.0
-
+path__kafka_tarfile="v${kafka_version}.tar.gz"
+path__kafka_build_directory="librdkafka-${kafka_version}"
 
 ### Install librdkafka
-## Install dependencies
-apk add --no-cache libressl-dev || exit 2
-apk add --no-cache cyrus-sasl-dev || exit 2
-apk add --no-cache zstd-dev || exit 2
-apk add --no-cache zlib-dev || exit 2
-apk add --no-cache git || exit 2
-apk add --no-cache make || exit 2
-apk add --no-cache gcc || exit 2
-apk add --no-cache g++ || exit 2
+## Install user dependencies
+apk add --no-cache libressl-dev
+apk add --no-cache cyrus-sasl-dev
+apk add --no-cache zstd-dev
+apk add --no-cache zlib-dev
+
+## Install developer dependencies
+apk add -t kafka-installer --no-cache curl
+apk add -t kafka-installer --no-cache make
+apk add -t kafka-installer --no-cache gcc
+apk add -t kafka-installer --no-cache g++
 
 ## Fetch librdkafka from github
-git clone https://github.com/edenhill/librdkafka.git || exit 2
-cd librdkafka/ || exit 2
-
-## Check out the version we plan to build, so it's pinned.
-git checkout v${kafka_version} || exit 2
+curl -LO "https://github.com/edenhill/librdkafka/archive/v${kafka_version}.tar.gz"
+tar zxf "${path__kafka_tarfile}"
+pushd "${path__kafka_build_directory}"
 
 ## Actually build and install librdkafka
-./configure --install-deps || exit 2
-make || exit 2
-make install || exit 2
+./configure --install-deps
+make -j
+make install
+
+## Remove the build directory
+popd
+rm -f "${path__kafka_tarfile}"
+rm -rf "${path__kafka_build_directory}"
 
 ## Install the confluent kafka python library
-pip install confluent-kafka==${kafka_version} || exit 2
+pip install confluent-kafka==${kafka_version}
+
+## Remove the temporary packages we needed to build with
+apk del kafka-installer
