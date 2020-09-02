@@ -77,4 +77,13 @@ help:
 	@ echo 'To release an image: make release-{major,minor,patch}-imagename'
 	@ echo 'To build all python images: make build-all-python-images'
 	@ echo 'For more information, c.f. README.'
-	@ echo $(.PHONY)
+	@ echo
+	@ echo 'Make targets'
+	@ echo '============'
+	@ echo
+	@ perl -ne 'print if /^[^\s]*:/' Makefile | grep -v .PHONY | cut -d':' -f1 | sort -u
+	@ echo
+	@ echo 'Phony make targets'
+	@ echo '=================='
+	@ echo
+	@ make -np | grep \^.PHONY: | sed 's/^\.PHONY: *//' | tr " " "\n" | sort -u
