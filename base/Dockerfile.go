@@ -1,4 +1,4 @@
-FROM golang:1.13.8-alpine
+FROM golang:1-alpine
 
 LABEL maintainer="core-tech@better.com"
 
