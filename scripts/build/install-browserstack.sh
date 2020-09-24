@@ -14,4 +14,6 @@ wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerr
 
 wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip &&
   unzip BrowserStackLocal-linux-x64.zip &&
+  chmod +x BrowserStackLocal &&
+  mv BrowserStackLocal /usr/local/bin &&
   rm BrowserStackLocal-linux-x64.zip
