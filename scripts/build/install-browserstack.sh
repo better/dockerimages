@@ -13,8 +13,8 @@ wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerr
   rm "glibc-$GLIBC_VERSION.apk"
 
 wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-alpine.zip &&
-  unzip BrowserStackLocal-linux-x64.zip &&
+  unzip BrowserStackLocal-alpine.zip &&
   chmod +x BrowserStackLocal &&
   mkdir -p /root/.browserstack/ &&
   mv BrowserStackLocal /root/.browserstack/ &&
-  rm BrowserStackLocal-linux-x64.zip
+  rm BrowserStackLocal-alpine.zip
