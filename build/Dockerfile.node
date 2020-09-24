@@ -22,9 +22,6 @@ COPY                                         \
 COPY                                   \
   scripts/build/install-semver-tool.sh \
   /tmp/scripts/build/
-COPY                                   \
-  scripts/build/install-browserstack.sh \
-  /tmp/scripts/build/
 # Install packages then run installation scripts
 RUN :                                                         \
   && apk update                                               \
@@ -45,8 +42,6 @@ RUN :                                                         \
   # Run build install scripts                                 \
   && chmod +x /tmp/scripts/build/install-semver-tool.sh       \
   && /tmp/scripts/build/install-semver-tool.sh                \
-  && chmod +x /tmp/scripts/build/install-browserstack.sh       \
-  && /tmp/scripts/build/install-browserstack.sh                \
   ;
 
 #
