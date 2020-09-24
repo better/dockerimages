@@ -22,6 +22,9 @@ COPY                                         \
 COPY                                   \
   scripts/build/install-semver-tool.sh \
   /tmp/scripts/build/
+COPY                                   \
+  scripts/build/install-browserstack.sh \
+  /tmp/scripts/build/
 # Install packages then run installation scripts
 RUN :                                                         \
   && apk update                                               \
@@ -42,6 +45,8 @@ RUN :                                                         \
   # Run build install scripts                                 \
   && chmod +x /tmp/scripts/build/install-semver-tool.sh       \
   && /tmp/scripts/build/install-semver-tool.sh                \
+  && chmod +x /tmp/scripts/build/install-browserstack.sh       \
+  && /tmp/scripts/build/install-browserstack.sh                \
   ;
 
 #
@@ -90,16 +95,3 @@ RUN echo "export NODE_RDKAFKA_VERSION_EXACT="$(            \
 # `npx semver`. This check is done by try-use-prebuilt-node-rdkafka.sh.
 #
 COPY scripts/try-use-prebuilt-node-rdkafka.sh /usr/local/bin/
-
-#### <browserstack>
-ENV GLIBC_VERSION glibc-2.32-r0.apk
-
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-  &&  wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/$GLIBC_VERSION" \
-  &&  apk add "$GLIBC_VERSION" \
-  &&  rm "$GLIBC_VERSION"
-
-RUN wget -q https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip \
-  &&  unzip BrowserStackLocal-linux-x64.zip \
-  &&  rm BrowserStackLocal-linux-x64.zip
-#### </browserstack>
