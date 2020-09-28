@@ -1,9 +1,12 @@
 #!/bin/bash -e
-#### Install latest librdkafka, right from the GIT repo.
+#### Install librdkafka.
 
-### Define the version of kafka we are pinning to.
-kafka_version=1.5.0
-path__kafka_tarfile="v${kafka_version}.tar.gz"
+### Inputs: can specify version, checksum
+librdkafka_version=${LIBRDKAFKA_VERSION:-1.5.0}
+librdkafka_sha256_sum=${LIBRDKAFKA_SHA256_SUM:-"f7fee59fdbf1286ec23ef0b35b2dfb41031c8727c90ced6435b8cf576f23a656"}
+### GitHub download URLs and paths
+librdkafka_url_base="https://github.com/edenhill/librdkafka/archive"
+path__kafka_tarfile="v${librdkafka_version}.tar.gz"
 path__kafka_build_directory="librdkafka-${kafka_version}"
 
 apt_install="apt-get install --no-install-recommends --yes"
@@ -22,8 +25,9 @@ ${apt_install} \
 ## Install developer dependencies
 ${apt_install} ${temporary_dependencies[*]}
 
-## Fetch librdkafka from github
-curl -LO "https://github.com/edenhill/librdkafka/archive/v${kafka_version}.tar.gz"
+## Fetch librdkafka from github, validate checksum, extract
+curl -LO "${librdkafka_url_base}/${path__kafka_tarfile}"
+sha1sum ${path__kafka_tarfile} | grep ${librdkafka_sha256_sum}
 tar zxf "${path__kafka_tarfile}"
 pushd "${path__kafka_build_directory}"
 
