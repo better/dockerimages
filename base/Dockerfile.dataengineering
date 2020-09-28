@@ -50,7 +50,7 @@ RUN : \
 RUN : \
   && ${PIP} numpy==1.17.0 pandas==0.24.0 scipy==1.2.0         \
             matplotlib==2.2 seaborn==0.8 statsmodels==0.9.0    \
-            pystan==2.19.1.1 prophet==0.1.1 timelines==0.2  \
+            pystan==2.19.1.1 timelines==0.2  \
   && ${PIP} scikit-learn==0.19.2                          \
   && python3 -c 'import matplotlib, numpy, pandas, seaborn, sklearn, statsmodels'
 # data access and infra
