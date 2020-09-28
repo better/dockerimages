@@ -8,21 +8,21 @@ ARG BASE_DEPENDENCIES
 COPY                                         \
   scripts/common/install-rds-certificates.sh \
   scripts/common/install-sops.sh             \
-  scripts/common/install-latest-librdkafka.sh \
+  scripts/common/install-librdkafka.sh       \
   /tmp/scripts/common/
-RUN :                                                         \
-  && apt-get update --yes                                     \
-  && apt-get upgrade --yes                                    \
-  && apt-get install --no-install-recommends --yes            \
-    # Base dependencies                                       \
-    ${BASE_DEPENDENCIES}                                      \
-    # Librdkafka                                              \
-    build-essential                                           \
-  # Run common install scripts                                \
-  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
-  && chmod +x /tmp/scripts/common/install-sops.sh             \
-  && chmod +x /tmp/scripts/common/install-latest-librdkafka.sh \
-  && /tmp/scripts/common/install-rds-certificates.sh          \
-  && /tmp/scripts/common/install-sops.sh                      \
-  && PURGE_BUILD_DEPENDS=1 /tmp/scripts/common/install-latest-librdkafka.sh \
+RUN :                                                                \
+  && apt-get update --yes                                            \
+  && apt-get upgrade --yes                                           \
+  && apt-get install --no-install-recommends --yes                   \
+    # Base dependencies                                              \
+    ${BASE_DEPENDENCIES}                                             \
+    # Librdkafka                                                     \
+    build-essential                                                  \
+  # Run common install scripts                                       \
+  && chmod +x /tmp/scripts/common/install-rds-certificates.sh        \
+  && chmod +x /tmp/scripts/common/install-sops.sh                    \
+  && chmod +x /tmp/scripts/common/install-librdkafka.sh              \
+  && /tmp/scripts/common/install-rds-certificates.sh                 \
+  && /tmp/scripts/common/install-sops.sh                             \
+  && PURGE_BUILD_DEPENDS=1 /tmp/scripts/common/install-librdkafka.sh \
   ;

@@ -9,7 +9,7 @@ ARG BUILD_DEPENDENCIES
 COPY                                         \
   scripts/common/install-rds-certificates.sh \
   scripts/common/install-sops.sh             \
-  scripts/common/install-latest-librdkafka.sh \
+  scripts/common/install-librdkafka.sh       \
   /tmp/scripts/common/
 # Copy needed build installation scripts
 COPY                                   \
@@ -27,7 +27,7 @@ RUN :                                                         \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
-  && chmod +x /tmp/scripts/common/install-latest-librdkafka.sh \
+  && chmod +x /tmp/scripts/common/install-librdkafka.sh       \
   && /tmp/scripts/common/install-rds-certificates.sh          \
   && /tmp/scripts/common/install-sops.sh                      \
   && /tmp/scripts/common/install-latest-librdkafka.sh         \
