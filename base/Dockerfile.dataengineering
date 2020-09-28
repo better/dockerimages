@@ -3,8 +3,8 @@ FROM debian:buster-slim
 LABEL variant="data-engineering"
 
 # ignored
-# ARG BASE_APK_DEPENDENCIES
-# ARG BUILD_APK_DEPENDENCIES
+# ARG BASE_DEPENDENCIES
+# ARG BUILD_DEPENDENCIES
 
 ARG PIP="pip3 install --no-cache-dir"
 ARG APT="apt-get -y --no-install-recommends install"
@@ -40,7 +40,7 @@ RUN :                                                         \
 RUN :                                                         \
   && ${APT} python3.7 python3-pip libffi-dev                  \
            libfreetype6-dev pkg-config libpng-dev             \
-	   python3-dev build-essential libffi-dev
+           python3-dev build-essential libffi-dev
 
 
 RUN : \
