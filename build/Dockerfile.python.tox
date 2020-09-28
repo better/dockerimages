@@ -1,5 +1,5 @@
 # -*- mode: sh; -*-
-FROM better/dockerimages:build-python-latest
+FROM better/dockerimages:build-python-1
 LABEL maintainer="core-tech@better.com"
 
 # First, we install pyenv, which we will use to install and manage several different versions of Python
