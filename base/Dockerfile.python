@@ -1,8 +1,8 @@
-FROM python:3-alpine3.12
+FROM python:3.7.9-slim-buster
 
 LABEL maintainer="core-tech@better.com"
 
-ARG BASE_APK_DEPENDENCIES
+ARG BASE_DEPENDENCIES
 
 # Install the base requirements
 COPY                                         \
@@ -11,24 +11,18 @@ COPY                                         \
   scripts/common/install-latest-librdkafka.sh \
   /tmp/scripts/common/
 RUN :                                                         \
-  && apk update                                               \
-  && apk upgrade                                              \
-  && apk add --no-cache                                       \
+  && apt-get update --yes                                     \
+  && apt-get upgrade --yes                                    \
+  && apt-get install --no-install-recommends --yes            \
     # Base dependencies                                       \
-    ${BASE_APK_DEPENDENCIES}                                  \
+    ${BASE_DEPENDENCIES}                                      \
     # Librdkafka                                              \
-    build-base                                                \
+    build-essential                                           \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
   && chmod +x /tmp/scripts/common/install-latest-librdkafka.sh \
   && /tmp/scripts/common/install-rds-certificates.sh          \
   && /tmp/scripts/common/install-sops.sh                      \
-  && /tmp/scripts/common/install-latest-librdkafka.sh         \
-  # link python to match what alpine apk does                 \
-  && ln -s /usr/local/bin/python /usr/bin/python3.8           \
-  && ln -s /usr/local/bin/python /usr/bin/python3             \
-  && ln -s /usr/local/bin/python /usr/bin/python              \
-  && ln -s /usr/local/bin/pip /usr/bin/pip3                   \
-  && ln -s /usr/local/bin/pip /usr/bin/pip                    \
+  && PURGE_BUILD_DEPENDS=1 /tmp/scripts/common/install-latest-librdkafka.sh \
   ;
