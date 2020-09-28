@@ -1,9 +1,9 @@
-FROM postgres:12-alpine
+FROM postgres:12
 
 LABEL maintainer="core-tech@better.com"
 
-ARG BASE_APK_DEPENDENCIES
-ARG BUILD_APK_DEPENDENCIES
+ARG BASE_DEPENDENCIES
+ARG BUILD_DEPENDENCIES
 
 # Copy needed common installation scripts
 COPY                                         \
@@ -17,16 +17,20 @@ COPY                                   \
   /tmp/scripts/build/
 # Install packages then run installation scripts
 RUN :                                                         \
-  && apk update                                               \
-  && apk upgrade                                              \
-  && apk add --no-cache                                       \
+  && apt-get update --yes                                     \
+  && apt-get upgrade --yes                                    \
+  # Install common core dependencies                          \
+  && apt-get install --no-install-recommends --yes            \
     # Base dependencies                                       \
-    ${BASE_APK_DEPENDENCIES}                                  \
+    ${BASE_DEPENDENCIES}                                      \
     # Base build dependencies                                 \
-    ${BUILD_APK_DEPENDENCIES}                                 \
-  && apk add --no-cache                                       \
+    ${BUILD_DEPENDENCIES}                                     \
+  # FIXME: install python for build - VERSION NOT CONTROLLED  \
+  && apt-get install --no-install-recommends --yes            \
+    python3                                                   \
     python3-dev                                               \
-    py3-setuptools                                            \
+    python3-pip                                               \
+    python3-setuptools                                        \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
@@ -37,4 +41,6 @@ RUN :                                                         \
   # Run build install scripts                                 \
   && chmod +x /tmp/scripts/build/install-semver-tool.sh       \
   && /tmp/scripts/build/install-semver-tool.sh                \
+  && apt-get autoremove                                       \
+  && apt-get clean                                            \
   ;

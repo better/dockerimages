@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM python:3.7.9-slim-buster
 
 LABEL variant="data-engineering"
 
@@ -38,8 +38,7 @@ RUN :                                                         \
 
 # data science first
 RUN :                                                         \
-  && ${APT} python3.7 python3-pip libffi-dev                  \
-           libfreetype6-dev pkg-config libpng-dev             \
+  && ${APT} libffi-dev libfreetype6-dev pkg-config libpng-dev \
            python3-dev build-essential libffi-dev
 
 
