@@ -1,47 +1,83 @@
 #!/bin/bash
-export BASE_APK_DEPENDENCIES=(
-  bash
-  curl
-  openssl
-  coreutils
-  ca-certificates
+BASE_DEPENDENCIES_MAP=(
+  # alpine          debian
+  bash              %
+  curl              %
+  openssl           %
+  coreutils         %
+  ca-certificates   %
   # qpid proton (for activemq) needs this library to authenticate
-  cyrus-sasl-plain
+  cyrus-sasl-plain  sasl2-bin
   # librdkafka needs these .so's at runtime
-  lz4-dev
-  cyrus-sasl-dev
+  lz4-dev           liblz4-dev
+  cyrus-sasl-dev    libsasl2-dev
 )
 
-export BUILD_APK_DEPENDENCIES=(
-  jq
-  git
-  tar
-  make
-  gnupg
-  docker
-  openssh
-  yaml-dev
-  zlib-dev
-  bzip2-dev
-  build-base
-  libffi-dev
-  libxslt-dev
-  openssl-dev
-  linux-headers
-  libjpeg-turbo-dev
-  readline-dev
-  sqlite-dev
-  sqlite
+BUILD_DEPENDENCIES_MAP=(
+  # alpine           debian
+  jq                 %
+  gcc                %
+  git                %
+  tar                %
+  make               %
+  gnupg              %
+  docker             %
+  sqlite             %
+  openssh            openssh-client
+  yaml-dev           libyaml-dev
+  zlib-dev           zlib1g-dev
+  bzip2-dev          lbzip2
+  build-base         build-essential
+  libffi-dev         %
+  sqlite-dev         libsqlite-dev
+  libxslt-dev        libxslt1-dev
+  openssl-dev        libssh-dev
+  readline-dev       libreadline-dev
+  linux-headers      linux-headers-amd64
+  libjpeg-turbo-dev  libjpeg62-turbo-dev
 )
 
-# Will this work on Docker Hub? Is `git` available? Should be...
+BASE_ALPINE_DEPENDENCIES=()
+BASE_DEBIAN_DEPENDENCIES=()
+for index in $(seq 0 2 ${#BASE_DEPENDENCIES_MAP[@]}); do
+  alpine_name=${BASE_DEPENDENCIES_MAP[${index}]}
+  debian_name=${BASE_DEPENDENCIES_MAP[$((${index} + 1))]}
+  if [[ "${debian_name}" == '%' ]]; then
+    debian_name=${alpine_name}
+  fi
+  BASE_ALPINE_DEPENDENCIES+=(${alpine_name})
+  BASE_DEBIAN_DEPENDENCIES+=(${debian_name})
+done
+
+BUILD_ALPINE_DEPENDENCIES=()
+BUILD_DEBIAN_DEPENDENCIES=()
+for index in $(seq 0 2 ${#BUILD_DEPENDENCIES_MAP[@]}); do
+  alpine_name=${BUILD_DEPENDENCIES_MAP[${index}]}
+  debian_name=${BUILD_DEPENDENCIES_MAP[$((${index} + 1))]}
+  if [[ "${debian_name}" == '%' ]]; then
+    debian_name=${alpine_name}
+  fi
+  BUILD_ALPINE_DEPENDENCIES+=(${alpine_name})
+  BUILD_DEBIAN_DEPENDENCIES+=(${debian_name})
+done
+
 git_root=$(git rev-parse --show-toplevel)
+
+if [[ "${DOCKERFILE_PATH}" == *python* ]]; then
+  BASE_DEPENDENCIES="${BASE_DEBIAN_DEPENDENCIES[*]}"
+  BUILD_DEPENDENCIES="${BUILD_DEBIAN_DEPENDENCIES[*]}"
+else
+  BASE_DEPENDENCIES="${BASE_ALPINE_DEPENDENCIES[*]}"
+  BUILD_DEPENDENCIES="${BUILD_ALPINE_DEPENDENCIES[*]}"
+fi
 
 # ${IMAGE_NAME}      is defined by Docker Hub: {repo}:{tag}
 # ${DOCKERFILE_PATH} is defined by Docker Hub: {path}
-docker build                                                        \
-  --build-arg BASE_APK_DEPENDENCIES="${BASE_APK_DEPENDENCIES[*]}"   \
-  --build-arg BUILD_APK_DEPENDENCIES="${BUILD_APK_DEPENDENCIES[*]}" \
-  --tag  "${IMAGE_NAME}"                                            \
-  --file "${git_root}/${DOCKERFILE_PATH}"                           \
+docker build                                                    \
+  --build-arg BASE_DEPENDENCIES="${BASE_DEPENDENCIES[*]}"       \
+  --build-arg BUILD_DEPENDENCIES="${BUILD_DEPENDENCIES[*]}"     \
+  --build-arg BASE_APK_DEPENDENCIES="${BASE_DEPENDENCIES[*]}"   \
+  --build-arg BUILD_APK_DEPENDENCIES="${BUILD_DEPENDENCIES[*]}" \
+  --tag  "${IMAGE_NAME}"                                        \
+  --file "${git_root}/${DOCKERFILE_PATH}"                       \
   ${git_root}
