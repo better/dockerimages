@@ -25,4 +25,6 @@ RUN :                                                                \
   && /tmp/scripts/common/install-rds-certificates.sh                 \
   && /tmp/scripts/common/install-sops.sh                             \
   && PURGE_BUILD_DEPENDS=1 /tmp/scripts/common/install-librdkafka.sh \
+  && apt-get autoremove                                              \
+  && apt-get clean                                                   \
   ;
