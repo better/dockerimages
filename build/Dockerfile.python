@@ -30,7 +30,7 @@ RUN :                                                         \
   && chmod +x /tmp/scripts/common/install-librdkafka.sh       \
   && /tmp/scripts/common/install-rds-certificates.sh          \
   && /tmp/scripts/common/install-sops.sh                      \
-  && /tmp/scripts/common/install-latest-librdkafka.sh         \
+  && /tmp/scripts/common/install-librdkafka.sh                \
   # Run build install scripts                                 \
   && chmod +x /tmp/scripts/build/install-semver-tool.sh       \
   && /tmp/scripts/build/install-semver-tool.sh                \

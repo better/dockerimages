@@ -7,7 +7,7 @@ librdkafka_sha256_sum=${LIBRDKAFKA_SHA256_SUM:-"f7fee59fdbf1286ec23ef0b35b2dfb41
 ### GitHub download URLs and paths
 librdkafka_url_base="https://github.com/edenhill/librdkafka/archive"
 path__kafka_tarfile="v${librdkafka_version}.tar.gz"
-path__kafka_build_directory="librdkafka-${kafka_version}"
+path__kafka_build_directory="librdkafka-${librdkafka_version}"
 
 apt_install="apt-get install --no-install-recommends --yes"
 apt_purge="apt-get purge --yes"
@@ -42,7 +42,7 @@ rm -f "${path__kafka_tarfile}"
 rm -rf "${path__kafka_build_directory}"
 
 ## Install the confluent kafka python library
-python3 -m pip install confluent-kafka==${kafka_version}
+python3 -m pip install confluent-kafka==${librdkafka_version}
 
 ## Remove the temporary packages we needed to build with
 if [[ -n "${purge_temporary}" ]]; then
