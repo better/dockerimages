@@ -108,12 +108,18 @@ Available TYPES are
 - `minor`
 - `patch`
 
-### Adding a package to APK for all images to use
+### Adding a package to an image
 
-If you need to add an APK package to all images, you can do so by modifying
-either `BASE_APK_DEPENDENCIES` or `BUILD_APK_DEPENDENCIES` in `hooks/build`.
-Then, when you execute `make build-IMAGE` as above, it will pick up the packages
-you added.
+If you need to add an package to all images, you can do so by appending
+the package names for `apk` and for `apt` to `BASE_DEPENDENCIES_MAP` in
+`hooks/build`.
+
+If you need to add a package only as a build dependency, append its
+package names to `BUILD_DEPENDENCIES_MAP`. Note that all dependencies in
+`BASE_DEPENDENCIES_MAP` are also installed in build images, so it is not
+necessary to specify a package's names twice.
+
+Rebuild with `make build-IMAGE` to add the package to `IMAGE`.
 
 ## Adding a fully new image
 

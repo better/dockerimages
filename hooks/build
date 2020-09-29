@@ -76,8 +76,6 @@ fi
 docker build                                                    \
   --build-arg BASE_DEPENDENCIES="${BASE_DEPENDENCIES[*]}"       \
   --build-arg BUILD_DEPENDENCIES="${BUILD_DEPENDENCIES[*]}"     \
-  --build-arg BASE_APK_DEPENDENCIES="${BASE_DEPENDENCIES[*]}"   \
-  --build-arg BUILD_APK_DEPENDENCIES="${BUILD_DEPENDENCIES[*]}" \
   --tag  "${IMAGE_NAME}"                                        \
   --file "${git_root}/${DOCKERFILE_PATH}"                       \
   ${git_root}

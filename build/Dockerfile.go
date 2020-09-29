@@ -2,8 +2,8 @@ FROM golang:1-alpine
 
 LABEL maintainer="core-tech@better.com"
 
-ARG BASE_APK_DEPENDENCIES
-ARG BUILD_APK_DEPENDENCIES
+ARG BASE_DEPENDENCIES
+ARG BUILD_DEPENDENCIES
 
 # Install the base requirements
 COPY                                         \
@@ -15,9 +15,9 @@ RUN :                                                         \
   && apk upgrade                                              \
   && apk add --no-cache                                       \
     # Base dependencies                                       \
-    ${BASE_APK_DEPENDENCIES}                                  \
+    ${BASE_DEPENDENCIES}                                      \
     # Base build dependencies                                 \
-    ${BUILD_APK_DEPENDENCIES}                                 \
+    ${BUILD_DEPENDENCIES}                                     \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
