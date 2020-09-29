@@ -26,10 +26,10 @@ BUILD_DEPENDENCIES_MAP=(
   openssh            openssh-client
   yaml-dev           libyaml-dev
   zlib-dev           zlib1g-dev
-  bzip2-dev          lbzip2
+  bzip2-dev          libbz2-dev
   build-base         build-essential
   libffi-dev         %
-  sqlite-dev         libsqlite-dev
+  sqlite-dev         libsqlite3-dev
   libxslt-dev        libxslt1-dev
   openssl-dev        libssh-dev
   readline-dev       libreadline-dev
