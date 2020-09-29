@@ -27,7 +27,7 @@ ${apt_install} ${temporary_dependencies[*]}
 
 ## Fetch librdkafka from github, validate checksum, extract
 curl -LO "${librdkafka_url_base}/${path__kafka_tarfile}"
-sha1sum ${path__kafka_tarfile} | grep ${librdkafka_sha256_sum}
+sha256sum "${path__kafka_tarfile}" | grep ${librdkafka_sha256_sum}
 tar zxf "${path__kafka_tarfile}"
 pushd "${path__kafka_build_directory}"
 
