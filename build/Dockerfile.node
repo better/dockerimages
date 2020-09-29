@@ -10,8 +10,8 @@ RUN mkdir ${NPM_CONFIG_PREFIX}
 ENV NODE_RDKAFKA_INSTALL      ${NPM_GLOBAL_PACKAGE_DIR}"/node-rdkafka"
 ENV NODE_RDKAFKA_VERSION_SPEC "^2.9.1"
 
-ARG BASE_APK_DEPENDENCIES
-ARG BUILD_APK_DEPENDENCIES
+ARG BASE_DEPENDENCIES
+ARG BUILD_DEPENDENCIES
 
 # Copy needed common installation scripts
 COPY                                         \
@@ -30,9 +30,9 @@ RUN :                                                         \
     # Install python3 because it is required for node-gyp     \
     python3                                                   \
     # Base dependencies                                       \
-    ${BASE_APK_DEPENDENCIES}                                  \
+    ${BASE_DEPENDENCIES}                                      \
     # Base build dependencies                                 \
-    ${BUILD_APK_DEPENDENCIES}                                 \
+    ${BUILD_DEPENDENCIES}                                     \
     libsecret-dev                                             \
   # Run common install scripts                                \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
