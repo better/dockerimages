@@ -1,52 +1,52 @@
-# -*- mode: sh; -*-
 FROM better/dockerimages:build-python-2
 LABEL maintainer="core-tech@better.com"
 
-# First, we install pyenv, which we will use to install and manage several different versions of Python
-RUN git clone https://github.com/pyenv/pyenv.git /etc/pyenv
-RUN echo 'export PYENV_ROOT="/etc/pyenv"' >> /etc/profile
-RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> /etc/profile
-RUN printf 'if &>/dev/null command -v pyenv; then\n  eval "$(pyenv init -)"\nfi\n' >> /etc/profile
+ENV                               \
+  PIPX_HOME=/usr/local/share/pipx \
+  PIPX_BIN_DIR=/usr/local/bin     \
+  PYENV_ROOT=/etc/pyenv           \
+  PYENV_SHELL=ash                 \
+  PYENV_VERSION=3.6.10:3.8.2      \
+  PYENV_VERSIONS="3.6.10:3.8.2"   \
+  PATH=/etc/pyenv/shims:/etc/pyenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-# Now, we install a couple of useful scripts
-COPY scripts/build/python.tox/forall-py.sh /usr/bin/forall-py
-COPY scripts/build/python.tox/with-pyenv.sh /usr/bin/with-pyenv
+# Install pyenv
+RUN :                                                        \
+  && git clone https://github.com/pyenv/pyenv.git /etc/pyenv \
+  && >>/etc/profile printf '%s\n%s\n%s\n%s\n'                \
+      'export PATH="${PYENV_ROOT}/bin:${PATH}"'              \
+      'if &>/dev/null command -v pyenv; then'                \
+        'eval "$(pyenv init -)"'                             \
+      'fi'
 
-# Next, we use pyenv to install the versions of Python we plan to support
-RUN with-pyenv install 3.6.10
-RUN with-pyenv install 3.8.2
-ENV PYENV_VERSIONS "3.6.10 3.8.2"
-RUN with-pyenv shell $PYENV_VERSIONS
+# Copy pyenv scripts
+COPY scripts/build/python.tox/forall-py.sh  \
+     scripts/build/python.tox/with-pyenv.sh \
+     /usr/bin/
 
-# Next, we upgrade pip to the latest version.
-RUN pip install --upgrade pip
-RUN forall-py pip install --upgrade pip
+# Install python 3.6.x and 3.8.x; 3.7.x is already installed
+RUN :                             \
+  && with-pyenv.sh install 3.6.10 \
+  && with-pyenv.sh install 3.8.2  \
+  && with-pyenv.sh shell ${PYENV_VERSIONS}
 
-# Next, we use pipx to isolate installations for our tools into their own pythons.
-ENV PIPX_BIN_DIR /usr/local/bin
-ENV PIPX_HOME /usr/local/share/pipx
-RUN pip install pipx
-RUN pipx ensurepath
+# Upgrade pip and install pipx
+RUN :                                       \
+  && pip install --upgrade pip              \
+  && forall-py.sh pip install --upgrade pip \
+  && pip install pipx                       \
+  && pipx ensurepath
 
 # Use black, isort, and flake8 to format and organize code and import lines.
-RUN pipx install black
-RUN pipx install isort
-RUN pipx install flake8
+RUN :                   \
+  && pipx install black \
+  && pipx install isort \
+  && pipx install flake8
 
-# Use pipenv to manage dependencies deterministically.
-RUN pipx install pipenv
-
-# Use pytest, tox, mypy, and coverage to check your code and run tests.
-RUN pipx install pytest
-RUN pipx install tox
-RUN pipx install mypy
-RUN pipx install coverage
-
-# Then, we set up environment so that users can run the commands we support easily.
-ENV PYENV_SHELL ash
-ENV PATH /etc/pyenv/shims:/etc/pyenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PYENV_ROOT /etc/pyenv
-ENV PYENV_VERSION 3.6.10:3.8.2
-
-# We don't set an entrypoint because the user is expected to derive or compose
-# another container using this as a base image.
+# Install pipenv for dependency management. Install tox + testing tools.
+RUN :                    \
+  && pipx install pipenv \
+  && pipx install pytest \
+  && pipx install tox    \
+  && pipx install mypy   \
+  && pipx install coverage
