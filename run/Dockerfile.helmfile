@@ -1,4 +1,4 @@
-FROM quay.io/roboll/helmfile:helm3-v0.129.3
+FROM quay.io/roboll/helmfile:helm3-v0.130.0
 
 LABEL maintainer="core-tech@better.com"
 
