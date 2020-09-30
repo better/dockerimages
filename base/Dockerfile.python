@@ -4,6 +4,9 @@ LABEL maintainer="core-tech@better.com"
 
 ARG BASE_DEPENDENCIES
 
+# Copy apt configuration
+COPY config/debian/etc/apt/apt.conf /etc/apt/
+
 # Install the base requirements
 COPY                                         \
   scripts/common/install-rds-certificates.sh \
@@ -11,9 +14,9 @@ COPY                                         \
   scripts/common/install-librdkafka.sh       \
   /tmp/scripts/common/
 RUN :                                                                \
-  && apt-get update --yes                                            \
-  && apt-get upgrade --yes                                           \
-  && apt-get install --no-install-recommends --yes                   \
+  && apt-get update                                                  \
+  && apt-get upgrade                                                 \
+  && apt-get install                                                 \
     # Base dependencies                                              \
     ${BASE_DEPENDENCIES}                                             \
     # Librdkafka                                                     \

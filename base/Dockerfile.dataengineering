@@ -7,7 +7,6 @@ LABEL variant="data-engineering"
 # ARG BUILD_DEPENDENCIES
 
 ARG PIP="pip3 install --no-cache-dir"
-ARG APT="apt-get -y --no-install-recommends install"
 
 ENV USER_ID=1000
 ENV USER=app
@@ -22,6 +21,9 @@ RUN adduser --home /home/${USER} \
             --disabled-login   \
             ${USER}
 
+# Copy apt configuration
+COPY config/debian/etc/apt/apt.conf /etc/apt/
+
 COPY                                         \
   scripts/common/install-rds-certificates.sh \
   scripts/common/install-sops.sh             \
@@ -29,7 +31,7 @@ COPY                                         \
 RUN :                                                         \
   && apt-get update                                           \
   # Run common install scripts                                \
-  && ${APT} wget git less bash curl openssl coreutils ca-certificates jq tar \
+  && apt-get install wget git less bash curl openssl coreutils ca-certificates jq tar \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
   && /tmp/scripts/common/install-rds-certificates.sh          \
@@ -38,7 +40,7 @@ RUN :                                                         \
 
 # data science first
 RUN :                                                         \
-  && ${APT} libffi-dev libfreetype6-dev pkg-config libpng-dev \
+  && apt-get install libffi-dev libfreetype6-dev pkg-config libpng-dev \
            python3-dev build-essential libffi-dev
 
 
@@ -54,7 +56,7 @@ RUN : \
   && python3 -c 'import matplotlib, numpy, pandas, seaborn, sklearn, statsmodels'
 # data access and infra
 RUN : \
-  && ${APT} postgresql-11 libpq-dev freetds-bin freetds-dev unixodbc-dev    \
+  && apt-get install postgresql-11 libpq-dev freetds-bin freetds-dev unixodbc-dev    \
   && chown "${USER}" /run/postgresql                                  \
   && ${PIP} psycopg2==2.8.4 pyodbc==4.0.28 flask-sqlalchemy==2.4.1    \
             SQLAlchemy==1.2.8 pg8000==1.13.2                          \

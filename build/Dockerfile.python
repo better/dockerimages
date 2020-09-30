@@ -5,6 +5,9 @@ LABEL maintainer="core-tech@better.com"
 ARG BASE_DEPENDENCIES
 ARG BUILD_DEPENDENCIES
 
+# Copy apt configuration
+COPY config/debian/etc/apt/apt.conf /etc/apt/
+
 # Copy needed common installation scripts
 COPY                                         \
   scripts/common/install-rds-certificates.sh \
@@ -17,9 +20,9 @@ COPY                                   \
   /tmp/scripts/build/
 # Install packages then run installation scripts
 RUN :                                                         \
-  && apt-get update --yes                                     \
-  && apt-get upgrade --yes                                    \
-  && apt-get install --no-install-recommends --yes            \
+  && apt-get update                                           \
+  && apt-get upgrade                                          \
+  && apt-get install                                          \
     # Base dependencies                                       \
     ${BASE_DEPENDENCIES}                                      \
     # Base build dependencies                                 \
