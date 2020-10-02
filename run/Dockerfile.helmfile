@@ -9,7 +9,7 @@ RUN apk add make python3 nodejs npm && \
     ln -s /usr/bin/pip3 /usr/bin/pip && \
     ln -s /usr/bin/python3 /usr/bin/python
 
-RUN pip install boto3 requests kubernetes awscli && \
+RUN pip install boto3 requests awscli && \
     npm -g install lodash js-yaml fs-extra aws-sdk @kubernetes/client-node
 
 # Install specifc version of kubectl
