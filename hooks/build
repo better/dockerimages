@@ -21,7 +21,7 @@ BUILD_DEPENDENCIES_MAP=(
   tar                %
   make               %
   gnupg              %
-  docker             %
+  docker             docker.io
   sqlite             %
   openssh            openssh-client
   yaml-dev           libyaml-dev
