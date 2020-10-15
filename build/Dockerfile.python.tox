@@ -1,4 +1,4 @@
-FROM better/dockerimages:build-python-latest
+FROM better/dockerimages:build-python-2
 LABEL maintainer="core-tech@better.com"
 
 ENV                               \
@@ -55,4 +55,4 @@ RUN :                    \
 # we install it here, just to be sure.
 RUN : \
   && apt-get install sqlite3 \
-
+  
