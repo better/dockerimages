@@ -22,7 +22,7 @@ BUILD_DEPENDENCIES_MAP=(
   make               %
   gnupg              %
   docker             docker.io
-  sqlite             %
+  sqlite             sqlite3
   openssh            openssh-client
   yaml-dev           libyaml-dev
   zlib-dev           zlib1g-dev

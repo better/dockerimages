@@ -50,3 +50,9 @@ RUN :                    \
   && pipx install tox    \
   && pipx install mypy   \
   && pipx install coverage
+
+# For some reason, the base packages are refusing to install SQLite3. Therefore,
+# we install it here, just to be sure.
+RUN : \
+  && apt-get install sqlite3 \
+  
