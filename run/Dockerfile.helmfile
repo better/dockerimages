@@ -26,6 +26,6 @@ RUN curl -LO https://github.com/kubernetes/kops/releases/download/1.14.1/kops-li
     chmod +x /tmp/scripts/common/install-sops.sh && /tmp/scripts/common/install-sops.sh
 
 # install stable repo
-RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+RUN helm repo add stable https://charts.helm.sh/stable
 
 ENV NODE_PATH /usr/lib/node_modules
