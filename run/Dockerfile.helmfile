@@ -26,6 +26,7 @@ RUN curl -LO https://github.com/kubernetes/kops/releases/download/1.14.1/kops-li
     chmod +x /tmp/scripts/common/install-sops.sh && /tmp/scripts/common/install-sops.sh
 
 # install stable repo
-RUN helm repo add stable https://charts.helm.sh/stable && helm repo add incubator https://charts.helm.sh/incubator && helm repo update
+#RUN helm repo add stable https://charts.helm.sh/stable && helm repo add incubator https://charts.helm.sh/incubator && helm repo update
+RUN helm repo add stable https://chartcenter.io/stable && helm repo add incubator https://chartcenter.io/incubator && helm repo update
 
 ENV NODE_PATH /usr/lib/node_modules
