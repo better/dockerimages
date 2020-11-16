@@ -31,7 +31,7 @@ COPY                                         \
 RUN :                                                         \
   && apt-get update                                           \
   # Run common install scripts                                \
-  && apt-get install wget git less bash curl openssl coreutils ca-certificates jq tar \
+  && apt-get install libopenblas-dev wget git less bash curl openssl coreutils ca-certificates jq tar -y \
   && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
   && chmod +x /tmp/scripts/common/install-sops.sh             \
   && /tmp/scripts/common/install-rds-certificates.sh          \
