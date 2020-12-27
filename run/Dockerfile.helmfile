@@ -10,10 +10,9 @@ RUN apk add make python3 nodejs npm && \
     chmod +x /tmp/scripts/common/install-sops.sh
 
 RUN pip install boto3 requests awscli && \
-    npm -g install lodash js-yaml fs-extra aws-sdk && \
+    npm -g install lodash js-yaml fs-extra aws-sdk helm-version-js@1.0.0 && \
     /tmp/scripts/common/install-sops.sh
 
-# install stable repo
-RUN helm repo add stable https://charts.helm.sh/stable && helm repo add center https://repo.chartcenter.io && helm repo update
-
 ENV NODE_PATH /usr/lib/node_modules
+
+ENTRYPOINT ["sh", "-c", "\"helm repo update && exec \\\"$@\\\"\""]
