@@ -13,4 +13,8 @@ RUN pip install boto3 requests awscli pybump && \
     npm -g install lodash js-yaml fs-extra aws-sdk && \
     /tmp/scripts/common/install-sops.sh
 
+RUN echo 'helm repo update > /dev/null 2>&1; exec "$@"' > /etc/entrypoint.sh
+
 ENV NODE_PATH /usr/lib/node_modules
+
+ENTRYPOINT ["/bin/sh", "/etc/entrypoint.sh"]
