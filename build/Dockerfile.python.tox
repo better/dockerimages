@@ -37,6 +37,10 @@ RUN :                                       \
   && pip install pipx                       \
   && pipx ensurepath
 
+# Install several useful libraries for scripting with python
+RUN : \
+  && /usr/bin/forall-py.sh pip install click sh returns rich atomicwrites
+
 # Use black, isort, and flake8 to format and organize code and import lines.
 RUN :                   \
   && pipx install black \
