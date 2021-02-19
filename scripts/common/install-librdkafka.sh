@@ -2,7 +2,7 @@
 #### Install librdkafka.
 
 ### Inputs: can specify version, checksum
-librdkafka_version=${LIBRDKAFKA_VERSION:-1.5.0}
+librdkafka_version=${LIBRDKAFKA_VERSION:-1.6.0}
 librdkafka_sha256_sum=${LIBRDKAFKA_SHA256_SUM:-"f7fee59fdbf1286ec23ef0b35b2dfb41031c8727c90ced6435b8cf576f23a656"}
 ### GitHub download URLs and paths
 librdkafka_url_base="https://github.com/edenhill/librdkafka/archive"
