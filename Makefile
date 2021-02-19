@@ -6,7 +6,7 @@ all: help
 
 ## Define handy macros for managing verison numbers, &c.
 INITIAL_VERSION=1.0.0
-image-part = $(word $2,$(subst -, ,$1))
+image-part = $(word $2,$(shell perl -e'$$_="$1";s/-/ /;print;'))
 
 define get_tag
 	git --no-pager tag -l "$(1)-[0-9.]*" \
