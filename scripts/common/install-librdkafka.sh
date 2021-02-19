@@ -3,7 +3,7 @@
 
 ### Inputs: can specify version, checksum
 librdkafka_version=${LIBRDKAFKA_VERSION:-1.6.0}
-librdkafka_sha256_sum=${LIBRDKAFKA_SHA256_SUM:-"f7fee59fdbf1286ec23ef0b35b2dfb41031c8727c90ced6435b8cf576f23a656"}
+librdkafka_sha256_sum=${LIBRDKAFKA_SHA256_SUM:-"3130cbd391ef683dc9acf9f83fe82ff93b8730a1a34d0518e93c250929be9f6b"}
 ### GitHub download URLs and paths
 librdkafka_url_base="https://github.com/edenhill/librdkafka/archive"
 path__kafka_tarfile="v${librdkafka_version}.tar.gz"
