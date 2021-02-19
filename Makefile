@@ -44,12 +44,17 @@ endef
 ### Define build system
 ## Build pattern to build an image
 .PHONY: build-%
+build-%: DOCKERFILE_PATH = $(call image-part,$*,1)/Dockerfile.$(call image-part,$*,2)
+build-%: IMAGE_NAME = $*
 build-%:
-	$(eval dir := $(call image-part,$*,1))
-	$(eval ext := $(call image-part,$*,2))
-	DOCKERFILE_PATH=${dir}/Dockerfile.${ext} \
-	IMAGE_NAME=$*                            \
-		hooks/build
+	@echo "\033[1;3;38;2;255;255;0mMake parameters\033[0m"
+	@echo "\033[1;3;38;2;255;255;0m===============\033[0m"
+	@echo "\033[1;3;38;2;255;255;0mDockerfile path\033[0;2m ... \033[0;1;3m$(DOCKERFILE_PATH)\033[0m"
+	@echo "\033[1;3;38;2;255;255;0mImage name\033[0;2m ........ \033[0;1;3m$(IMAGE_NAME)\033[0m"
+	@echo
+	@DOCKERFILE_PATH=$(DOCKERFILE_PATH) \
+	IMAGE_NAME=$(IMAGE_NAME) \
+	hooks/build
 
 ## Release pattern to bump version numbers and publish a tag
 .PHONY: release-major-%
