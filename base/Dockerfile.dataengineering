@@ -21,9 +21,6 @@ RUN adduser --home /home/${USER} \
             --disabled-login   \
             ${USER}
 
-# Copy apt configuration
-COPY config/debian/etc/apt/apt.conf /etc/apt/
-
 # data science first
 RUN :                                                         \
   && apt-get install libffi-dev libfreetype6-dev pkg-config libpng-dev \
