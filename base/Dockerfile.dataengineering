@@ -26,7 +26,6 @@ RUN :                                                         \
   && apt-get install libffi-dev libfreetype6-dev pkg-config libpng-dev \
            python3-dev build-essential libffi-dev
 
-
 RUN : \
   && ${PIP} six==1.13.0 setuptools==45.2.0 packaging==20.3 docutils==0.16 \
             cryptography==2.8
@@ -37,6 +36,7 @@ RUN : \
             pystan==2.19.1.1 timelines==0.2  \
   && ${PIP} scikit-learn==0.19.2                          \
   && python3 -c 'import matplotlib, numpy, pandas, seaborn, sklearn, statsmodels'
+
 # data access and infra
 RUN : \
   && apt-get install postgresql-11 libpq-dev freetds-bin freetds-dev unixodbc-dev    \
