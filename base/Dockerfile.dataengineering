@@ -1,4 +1,4 @@
-FROM python:3.7.9-slim-buster
+FROM artifactory.bettermg.com/docker/better/dockerimages:build-python-latest
 
 LABEL variant="data-engineering"
 
@@ -23,20 +23,6 @@ RUN adduser --home /home/${USER} \
 
 # Copy apt configuration
 COPY config/debian/etc/apt/apt.conf /etc/apt/
-
-COPY                                         \
-  scripts/common/install-rds-certificates.sh \
-  scripts/common/install-sops.sh             \
-  /tmp/scripts/common/
-RUN :                                                         \
-  && apt-get update                                           \
-  # Run common install scripts                                \
-  && apt-get install libopenblas-dev wget git less bash curl openssl coreutils ca-certificates jq tar -y \
-  && chmod +x /tmp/scripts/common/install-rds-certificates.sh \
-  && chmod +x /tmp/scripts/common/install-sops.sh             \
-  && /tmp/scripts/common/install-rds-certificates.sh          \
-  && /tmp/scripts/common/install-sops.sh                      \
-  && ln -s /usr/include/locale.h /usr/include/xlocale.h
 
 # data science first
 RUN :                                                         \
@@ -77,6 +63,3 @@ ENV PATH="/usr/lib/postgresql/11/bin:${PATH}"
 #   * in use in very few places
 #   * in process of being deprecated
 #   * janky
-
-
-
