@@ -21,6 +21,8 @@ RUN adduser --home /home/${USER} \
             --disabled-login   \
             ${USER}
 
+RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
+
 # data science first
 RUN :                                                         \
   && apt-get install libffi-dev libfreetype6-dev pkg-config libpng-dev \
