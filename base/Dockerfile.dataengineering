@@ -1,4 +1,4 @@
-FROM artifactory.bettermg.com/docker/better/dockerimages:build-python-latest
+FROM better/dockerimages:build-python-latest
 
 LABEL variant="data-engineering"
 
