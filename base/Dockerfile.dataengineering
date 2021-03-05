@@ -2,10 +2,6 @@ FROM artifactory.bettermg.com/docker/better/dockerimages:build-python-latest
 
 LABEL variant="data-engineering"
 
-# ignored
-# ARG BASE_DEPENDENCIES
-# ARG BUILD_DEPENDENCIES
-
 ARG PIP="pip3 install --no-cache-dir"
 
 ENV USER_ID=1000
@@ -20,6 +16,9 @@ RUN adduser --home /home/${USER} \
             --disabled-password \
             --disabled-login   \
             ${USER}
+Run :  \
+  && apt-get -y update \
+  && apt-get -y install libopenblas-dev wget less
 
 RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 
