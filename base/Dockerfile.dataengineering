@@ -18,7 +18,7 @@ RUN adduser --home /home/${USER} \
             ${USER}
 Run :  \
   && apt-get -y update \
-  && apt-get -y install libopenblas-dev wget less
+  && apt-get -y install libopenblas-dev wget less tk
 
 RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 
@@ -33,7 +33,7 @@ RUN : \
 
 RUN : \
   && ${PIP} numpy==1.17.0 pandas==0.24.0 scipy==1.2.0         \
-            matplotlib==2.2 seaborn==0.8 statsmodels==0.9.0    \
+            matplotlib==2.2.2 seaborn==0.8 statsmodels==0.9.0    \
             pystan==2.19.1.1 timelines==0.2  \
   && ${PIP} scikit-learn==0.19.2                          \
   && python3 -c 'import matplotlib, numpy, pandas, seaborn, sklearn, statsmodels'
