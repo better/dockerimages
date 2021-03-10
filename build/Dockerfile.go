@@ -1,4 +1,4 @@
-FROM golang:1-alpine
+FROM golang:1-alpine3.12
 
 LABEL maintainer="core-tech@better.com"
 
@@ -24,3 +24,5 @@ RUN :                                                         \
   && /tmp/scripts/common/install-rds-certificates.sh          \
   && /tmp/scripts/common/install-sops.sh                      \
   ;
+
+RUN curl -fL https://getcli.jfrog.io | sh
